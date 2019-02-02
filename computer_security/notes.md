@@ -1,4 +1,4 @@
-<h2> Computer Security</h2>
+## Computer Security
 
 <h3>Chapter 1 Fundamental Concepts</h3>
 <h4>1.1 Confidentiality, Integrity, and Availability </h4>
@@ -46,3 +46,24 @@
     - *Computational redundancies:*
       - computer and storage devices that serve as fallbacks in case of failures 
       - redunduant arrays of inexpensive disks (RAID) use storage redundancies to keep data available to clients
+    
+      
+<h3>Chapter 5  Network Security</h3>
+<h4>1 Network Security Concepts</h4>
+<h5>1.1 Network Topology </h5>
+
+ - data packet is a finite-length set of bits -> divided into a 
+   - header: specifices where the packer is going and contains various overhead/bookkeeping details
+   - payload: actual information that is being communicated
+- network connection structure  -> network topology
+- computers in a network are **host nodes** that can be sources and destinations of messages
+- routers are communcation nodes -> messages flow 
+- physical connection between nodes define channels where messages travel so that packets move by being passed from one to another to get source -> destination
+- private network of computers in close zone ->  *local area network (LAN)* 
+  - internet -> *wide area network (WAN)* 
+    - Antonomous Systems(ASs) -> wide area networks on the internet -> clusters
+      - controlled by single organisation entity -> how packets are routed aong nodes
+      - using shortest paths so distance is minimized and routing cycles are avoided
+      - between ASs -> by contractual agreements, avoid loops 
+      
+<h5>1.1 Network Topology </h5>
