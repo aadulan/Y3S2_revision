@@ -67,3 +67,37 @@
       - between ASs -> by contractual agreements, avoid loops 
       
 <h5>1.1 Network Topology </h5>
+ 
+ - *Internet protocol Stack* 
+   - layers provides a set of services & functionality guarantees for higher layers
+   - interface each layer provides to higher levels -> provide essential info, lower level details are hidden
+- ***Physical Layer:****
+  - move the actual bits between nodes of the network
+  - physical wires (abstraction it provides to the higher level is the ability)
+- ***Link layer:***
+  - transfer data between a pair of network nodes | between nodes in a local-area network and to detetc erros that occur at the physical layer
+  - deals with logic in sending info & how to find good routing paths in a local-area network.
+  - Protocols such as Ethernet -> route packets between computers sharing a common connection
+  - The link layer provides a grouping of bits into ordered records, called frames -> 48 bit address called *media access control addresses (MAC address)*
+- ***Network layer:***
+  - known as the internet layer
+  - provide for moving of packets between any two hosts(best effort basis)
+  - individually addressing each host using a *IP address*
+  - Main protocol is (IP) -> IPv4(32 bit IP addresses), IPv6(128 bit IP address) 
+  - *Best Effort Basis*  no gurantees that any packet will be delivered, if reliable delivery is needed -> upper layer requirement 
+- ***Transport Layer:***
+  - support communication and connections between applications based on IP address and ports(16 bit address) for application level protocols 
+  - *Transmission Contol Protocol(TCP)*
+    - virtual connection between a client and a server and gurantees delivery of all packets in an ordered fashion
+  - *User Datagram Protocol(UDP)*
+    - assumes no setup and delivers packets as quickly as possible but with no delivery gurantees
+- ***Application Layer:***
+  - protocols that support useful functions on the internet, based on the transport layer services.
+  - HTTP -> uses TCP & supports web browising 
+  - DNS -> UDP & supports use of useful names for hosts instead of IP address 
+  - SMTP & IMAP -> TCP & support electronic mail
+  - SSL -> TCP & supports encrypted connections 
+  - VoIP -> UDP & supports Internet telephone messaging 
+- 
+  
+  
