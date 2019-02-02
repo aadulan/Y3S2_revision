@@ -8,7 +8,11 @@
 * Gaussian Elimination -> echelon form without changing the soloution set
   - Row addition 
   - Row swap
-    - The idea is that you try to get the coefficient of the first coloum 0 besides 1 of them and you try and carry that on with the rest of the rows.
-   
+  - The idea is that you try to get the coefficient of the first coloum 0 besides 1 of them and you try and carry that on with the rest of the rows.
+   - **NOTE**: Using different operations can make you achieve a different echelon form
+* **Thm 1.1.4**
+  - *(Solution sets of inhomogeneous systems of linear equations). If the solution set of a linear system of equations is non-empty, then we obtain all solutions by adding componentwise an arbitrary solution of the associated homogenised system to a fixed solution of the system.*
 
+<h4> 1.2 Fields and Vector Spaces</h4>
 
+<h5>Def 1.2.1</h5>
