@@ -15,4 +15,6 @@
 
 <h4> 1.2 Fields and Vector Spaces</h4>
 
-<h5>Def 1.2.1</h5>
+* **Def 1.2.1**
+  - A **field** F is a set with functions 
+    - Addition = +: F x F -> F ;($$\lambda, \mu$$) -> $$\lambda + \mu$$
