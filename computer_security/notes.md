@@ -66,8 +66,8 @@
       - using shortest paths so distance is minimised and routing cycles are avoided
       - between ASs -> by contractual agreements, avoid loops
 
-<h5>1.2 Internet Protocol Layers  </h5>
-- *Internet protocol Stack*
+<h5>1.2 Internet Protocol Layers</h5>
+- ***Internet protocol Stack*** 
     - layers provides a set of services & functionality guarantees for higher layers
     - interface each layer provides to higher levels -> provide essential info, lower level details are hidden
 - ***Physical Layer:***
