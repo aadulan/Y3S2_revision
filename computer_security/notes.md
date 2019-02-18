@@ -67,7 +67,8 @@
       - between ASs -> by contractual agreements, avoid loops
 
 <h5>1.2 Internet Protocol Layers</h5>
-- ***Internet protocol Stack*** 
+
+- ***Internet protocol Stack***
     - layers provides a set of services & functionality guarantees for higher layers
     - interface each layer provides to higher levels -> provide essential info, lower level details are hidden
 - ***Physical Layer:***
@@ -113,4 +114,30 @@
 <h5>1.3 Network Security Issues</h5>
 
 - ***Confidentiality***
-    -
+    - encryption could be done at application layer (https protocols & IP sec specs)
+- ***Integrity***
+    - checksums to validate a small number of bits not encryption -> not cryptographically secure.
+    -  should be done at the application layers | alternative protocols at lower Layers
+- ***Availability***
+    - become unavailable -> lots of data requests,
+    - need to scale with ↑ communications requests & block attacks from illegitimate request
+-  ***Assurance***
+    - by default, a packet is allowed to travel between any source and destination in a network, introduce permissions & policies that control data flow in a network, implemented as explicit additions, firewalls designed to blocked traffic in and out of a network domain, if that traffic violates policies set by the administrators
+- ***Authenticity***
+    - headers & footers -> internet protocol don't have a place to put digital signatures, no notion of user identities, data exchanged between machines & allow for signatures, explicitly at the application layer & alternative protocol
+- ***Anonymity***
+    - no default notion of identity of users of internet -> built-in anonymity -> good for human rights worker reporting on abuses & bad if thief steals credit card numbers identity
+
+<h4>The Link Layer</h4>
+
+- modern operating systems include TCP & IP implementation, allow programs to interact with IP stack
+- libraries support upper levels (including passing data to physical layer device drivers)-> starts with the link layer ↑ above the physical layer & concept of group sequences of bits into frames
+
+<h5>2.1 Ethernet</h4>
+
+- Ethernet refers to physical medium (cable) as well as the link-layer protocol
+- frame transmitted on a cable -> impulse is sent through cable & received by other machines that connect to cable on same *local-area network (LAN)*
+- portion of local-area network -> same logical connection : *network segment*
+- two machines on same network segment transmit a frame at same time, a collision occurs & frames must be discarded and retransmitted.
+- ***Dealing with Collisions***
+    - 
