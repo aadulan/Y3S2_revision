@@ -140,4 +140,56 @@
 - portion of local-area network -> same logical connection : *network segment*
 - two machines on same network segment transmit a frame at same time, a collision occurs & frames must be discarded and retransmitted.
 - ***Dealing with Collisions***
-    - 
+    - The Ethernet protocol is designed so that eventually every machine in a network segment will succeed in transmitting its frame.
+- ***Ethernet Hub and switches***
+    - a device that logically connects multiple devices together, allowing them to act as a single network segment (particpate in Ethernet Collision resolution protocol), can generate large amounts of traffic
+    - Switches act like hubs but overtime learns the address of machines that are connected. a switch will then only forward each frame it receives along the cable it knows is connected to the destination for that frame.
+    - reduces possibilties collisions & increases speed of network, effective bandwidth
+    - reduces risk of network eavsdropping as network frames forwarded by a switch are less likely to been seen by machines which are not destinations
+
+<h5>Media Access Control (MAC) Addresses </h4>
+
+- network interfaces are typically identified by a hardware-specific identifier known as its media access control address (MAC address)
+- 48 bit identifier assigned to a network interface by its manufacturer
+- sequence of six pairs of hexadecimal digits 00:16:B7:29:E4:7D
+- used in the link layer to indentify devices in a network - intended to be unique
+- first 24 bits are a prefix identity the organisation
+- can be changed by software through driver of network
+- change -> the second-least-significant bit of the most significant byte is set to 1, while in a manufacturer-issued MAC, this bit is set to 0
+- faciliate routing of frames to correct destinations
+- what switches use
+- format of a ethernet frame:
+    - preamble
+    - delimiter
+    - mac dest/src
+    - ethertype length
+    - payload
+    - CRc-32 checksum ->confirm data integegrity
+    - interframe gap
+
+<h5>ARP Spoofing</h4>
+
+- The Address Resolution Protocol (ARP) is a link-layer protocol that pro- vides services to the network layer. ARP is used to find a host’s hardware address given its network layer address.
+- Used to determine the mac adrress associated with a give IP -> valuable service (man in the middle attack agaisnt protocol)
+
+<h6> How ARP works ? </h6>
+- let a machine want to send a packet to a dest machine on the same network.
+- at network layer - scr knows the dest ip address, sending the packet is job of the link layer, src needs to idenify the mac address of dest machine
+- in arp proctol, resoulution of ip address to mac is done by a broadcast message that queries all network interfaces on a local-are network so proper destination can respond.
+- the reply is transmitted in a frame addressed to the machine that made the  request.
+- stored the IP-MAC address pair in a table called arp cache so doesn't have to do it again, src can send to dest
+- lacks Authentication. Any computer on network could claim to request the ip address , any machine can recieve an arp reply even if it didn't make the request will automatically update the cache. Shortcoming, it is possible for malicious parties on a LAN to perform a arp spoofing attack,
+- The attacker sned a arp reply to a target, who associates the ip address of the lan gateway with the attackers mac address. the atttacker sends an arp reply to bob associating the target ip's address with the attacker's mac address.this is arp cache poisioning. Bob now things alice ip is connected with eve mac  and alice thinks bob ip is connected to eve mac. thus everything is routed through eve.
+- Eve now has control of traffic and can sniff passwords or tamper with traffic.
+- a denial of service attack is also possible.
+- arp spoofing is derived from lack of identity veriffication
+- to solve :
+    - restrict LAN Access
+    - checking for multiple occurrences of the same MAC address on the LAN, which may be an indicator of possible ARP spoofing.
+    - Static ARP Tables :
+        - requires a network administrator to manually specify a router’s ARP cache to assign certain MAC addresses to specific IP addresses.
+        - requests to adjust the cache are ignored
+        - reduces flexibility if a new device joins
+        - does not prevent an attacker from spoofing a mac address to intercept traffic
+
+<h4>3 Network Layer </h4>
