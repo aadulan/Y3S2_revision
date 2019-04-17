@@ -193,3 +193,81 @@
         - does not prevent an attacker from spoofing a mac address to intercept traffic
 
 <h4>3 Network Layer </h4>
+Network layer move packets between any two hosts in a network on a best effort basis. Relies on the link layer to do this.
+
+<h5> IP </h5>
+- The *Internet Protocol* (IP) is a protcol which performs a best efford to route a data packet from a src node to a dest node.
+- In IP, every node is given a unique numerical address:
+    -  32 bit number(IPv4)
+    -  128 bit number (IPv6)
+
+<h6> Routing IP Packets </h6>
+A host has an algorithm for routing packets from that host:
+    - Packet is addressed to a machine on the same LAN, then packet is transmitted directly on LAN using ARP to determine mac address of dest machine.
+    - packet is address to a machine that is not on the LAN, packet is transmitted to a specially designated machine on LAN(gateway). ARP protocol is used to determine mac address of gateway
+A host typically stores a list of IP address of the machines on LAN and the ip address of the gateway.
+Once a packet has reached a gateway node, needs to be further routed to its final dest
+Gateways and other nodes that handle routing of packets on the internet are called routers. Typically connected to two of more LANSs and use internal data structures known as routing tables to work out the next router.
+data packet with dest t, a routing table lets the router determine which neighnour it should send the packet to. Based on the numerical address,t, the routing protocol encodes the next hop from this router to each possible destination.
+There can be a misconfiguration in the routing tables that can cause a packet to travel forever. To stop this each IP packet is given (TTL - time-to-live) count by its scr. Known as a hop limit <= 255 hops and is decremented by each router that processes the packet.  if it =0 then packet is discared and error packet is sent to scr.
+
+<h6> The structure of the internet </h6>
+Routers are designed to be very fast. From each packet - it performs :
+- ***Drop*** : if packet is expired,it is dropped
+- ***Deliver*** : If the destination is a machine on one of the LANs to which
+the router is connected, then the packet is delivered to the destination.
+- ***Forward*** : If the destination of the packet does not belong to the LANs of the router, then the packet is forwarded to a neighboring router.
+
+2 protocols that determine how the next hops are encoded:
+- ***Open Shortest Path First (OSPF)*** : determines how packets are routed within an Autonomous system and is based on a policy that packets should travel along the shortest paths
+- ***Border Gateway Protocol (BGP)*** : etermines how packets are routed between autonomous systems (ASs) and it is based on policies dictated by contractual agreements between different ASs The routes established by BGP may not be shortest paths.
+
+Difference between a router and a switch is that a switch handles forwarding of packets on a single network and uses learned associations to reduce use of broadcasting . Router can belong to many networks and use routing tables to determine how to forward packets, can aviod broadcast altogether.
+
+Bits in IP packet have a stucture
+- fixed length header
+    - total length of packet
+    - TTL time to live
+    - scr ip
+    - dest ip
+- variable length data portion
+
+not guarantee that each packet successfully travels from its src to its dest, Ip can detect a packet headers are damaged. Comes with a checksum value, host or router can check -> need to recompute the function and compare value.the time-to-live, are modified with each hop, this checksum value must be checked and recomputed by each router that processes this packet.
+
+Subnetworks (subnets) allow partitions in the networks into logical groups.IPv4  32-bit numbers that are stored as binary but written as 4 bytes
+- network portion -> ip prefix used by all machines on the same network
+- a host portion -> detect that particular device
+- two portions are differentiated by providing a subnet mask along with the IP address.
+- The network portion of the IP address can be identified by bitwise ANDing the subnet mask with the IP address, and the host portion can be identified by XORing this result with the IP address.
+- subnet masks can be used to define address range of a particular network
+- range of ip addtess are based on size of organization in question.
+    - ***Class A*** network : largest, has a subnet mask of at least 8 bits and includes up to 224 = 16, 777, 216 unique IP addresses
+    - ***Class B*** network : have at least a 16-bit subnet mask and up to 216 = 65, 536 unique IP addresses; they are typically allocated for ISPs and large businesses.
+    - ***Class C*** network : 4-bit subnet mask, include up to 28 = 256 unique addresses, and are assigned to smaller organizations.
+IP addresses with the host portion consisting of all zeros or all ones have a special meaning and are not used for to identify machines. Thus, a class C network has 254 usable IP addresses. Total address space for IPv4 is on the verge of exhaustion: soon, all possible IPv4 addresses will be assigned. Network Address Translation, or NAT delays the exhaustion of the IPv4 address space, it doesn’t solve it, and an actual solution is provided by IPv6, which features 128-bit addresses.
+
+<h6> Internet Control Message Protocol</h6>
+- Network layer protocol (ICMP)
+- used by hosts to perform a number of testing and error notfi tasks.
+- network diagnostic tasks
+- determining if a host is alive & finding the path followed by a packet:
+    - ***Echo request*** : Asks the destination machine to acknowledge the re- ceipt of the packet
+    - ***Echo response*** : Acknowledges the receipt of a packet in reply to an echo request
+    - ***Time exceeded*** : Error notification that a packet has expired, that is, its TTL is zero
+    - ***Destination unreachable*** : Error notification that the packet could not be delivered
+
+- ***Ping*** :uses the ICMP protcol to verify whether or not a certain host is receiving packets. ICMP echo request message to the dest host, replies with an ICMP echo response message. Simple protocol is often the first diag- nosis tool used to test if hosts are working properly.
+- ***Traceroute*** : ICMP messages to determine the path a packet takes to reach another host, either on a local network or on the Internet.  It uses TTL field in the IP header. Attempts to send a packet to the target with a TTL. Receiving a packet with TTL of 1, intermediate router discards the packets and replies to the sender with an ICMP time excceeded message,revealing the first machine along the path to the target.. it sends another packet with a TTL of 2, reaching the first router in the path, the TTL is decremented by one and forwarded to the next router. in turn sends an ICMP packet to the original sender, incrementing the TTL field in this way, traceroute can determine each host along the path to the target
+
+<h6> IP Spoofing</h6>
+IP packet includes a place to specify the IP addresses of the destination and source nodes of the packet.
+validity of the source address is never checked, it is trivial for anyone to specify a source address that is different from their actual IP address. Nearly every operating system provides an interface by which it can make network connections with arb ip header info so it can make connections. spoofing is specifing the desired ip is scr filed of an ip packet data before sending it to network.
+IP spoofing does not let an attacker assume an new ip by changed headers, the ip stays the same
+
+<h6> How IP Spoofing is used in other attacks</h6>
+attacker sends an IP packet with a spoofed src address, won't receive a repsonse from dest server. spoofed src ip address on an outbound packet, machine with the server spoofed ip address will receive a response from the dest server not the attacker.
+attacker is using IP spoofing on his outbound packets, must not car about any response for these packets or has a way to receive response
+
+<h6> Dealing with IP Spoofing</h6>
+- Border Routes: routers span two or more subnetworks can be used to block packets from outside their admin domain that have scr address from inside domain
+- 
