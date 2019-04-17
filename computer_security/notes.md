@@ -270,4 +270,52 @@ attacker is using IP spoofing on his outbound packets, must not car about any re
 
 <h6> Dealing with IP Spoofing</h6>
 - Border Routes: routers span two or more subnetworks can be used to block packets from outside their admin domain that have scr address from inside domain
-- 
+- IP traceback : tracing path of a packet back to its actual src address. Requests can be made to various autonomous systems along this path to block packets from this location
+
+<h5> Packet Sniffing </h5>
+Comprising confidentiality. Possible to listen in on the traffic . Known as packet sniffing.
+Performed independlty of wheather the packets are traveling via wireless Internet : attacker resides on the same network segment
+Frames are transmitted over an ethernet network, received by ever device on same network.
+segment will normally compare the frame’s destination MAC address with its own MAC address, and discard the frame if it doesn’t match.
+Network mode set to *promiscuous* mode, llows an attacker to examine all data transmitted over a particular network segment
+
+<h6> Defenses against Packet sniffing</h6>
+- PS can be used to troubleshoot network related problems -> computer is infected with adware or spyware
+- Use Ethernet switches instead of Hubs, less number of machines on attacker network segment,Note that there is no analog to the switch when communicating wirelessly,
+- detect when network devices are in promiscuous mode
+    - the fact that when a network interface is receiving all network traffic, the operating system behind that network interface is using much more processing power than if these frames were being dropped
+    - elicit responses to invalid packets from network devices may provide clues suggesting
+    - should use encryption HTTPS instead of HTTP
+
+<h4>4 Transport Layer </h4>
+supports communication between machines.addressing extended is achieved by viewing each machine as having lots of ports.
+16-bit source and destination port numbers.
+Protocols:
+- Transmission Control Protocol (TCP)
+- User Datagram Protocol (UDP)
+Extra feature of tcp connection oriented and provides reliable stream of bytes, with a gurantee that info arrives intact. if lost it is resend
+UDP best-effort communicatiin : where speed is more important than completeness.
+
+
+<h5>Transmission Control Protocol (TCP)</h5>
+Takes IP Protocol and gurantees transmission of a stream of bits between two virtual ports.
+
+<h6>Transmission Control Protocol (TCP)</h6>
+TCP session starts with connection between sender & receiver, parties can then communicate. Ensures reliable transmission by a sequence number that is initalised during the three-way handshake, Transmission features an incremented sequence number, each part is aware when packets arrive, out of order all or not at all,
+Incoporates a cumulative acknowledge schemem two TCP sessions , sender and receiver communicating via their established TCP connection.
+the sender sends the receiver a specified amount of data, the receiver will confirm that it has received the data by sending a response packet to the sender with the acknowledgment field set to the next sequence number it expects to receive. If any information has been lost, then the sender will retransmit it.
+Manages amount of data that can be sent by one party while avioding overwhleming, processing resources of other or bandwidth of network itself(*flow control*) use *sliding window protocol* -> receiver informs sender of size of receive window(number of bytes of data willing to accept befor sender must pause and wait for a response), sender keeps track of value of last thing.  When sending , the sender checks the sequence number of packet and continues only if number is less than last acknowedlenge plus current size of recevive window. Otherwise it waits, stores the number shifting sliding window of sequence numbers. Sender sets a time so if no acknowledgment is received before the times expires, sender assumes data loss and retransmits
+Checksum field to ensure correctness. not intended to be cryptographically secure, detect inconsistencies in data due to network erros rather than tamoering.
+
+<h6>Congenstion Control</h6>
+attempt to prevent overwhelming a network with traffic which could lead in poor transmission rates and dropped packets. congenstion control is not implemented into tcp packets but based on the info gathered by keeping track of acknowledgements for prev sent data and time required for certain operations. TCP adjusts data transmission rates using this information to prevent network congestion.
+
+<h6>TCP Packet Format</h6>
+Format of TCP :
+- dest port
+- scr port
+- communication connection for this packet and others like it
+- connections have a state
+
+<h6>TCP Connections</h6>
+- three-way handshake to establish a reliable connection stream between 2 parties 
