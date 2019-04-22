@@ -318,4 +318,69 @@ Format of TCP :
 - connections have a state
 
 <h6>TCP Connections</h6>
-- three-way handshake to establish a reliable connection stream between 2 parties 
+- three-way handshake to establish a reliable connection stream between 2 parties, client sends packef to desired dest with SYN(synchronization) flag, included a random initialization for *sequence numbers*, used for reliable ordering of future transmissions. SErver replies with a packet marked with SYN and ACK(acknowledgement) flags (SYN-ACK) packet, says servers wants to accept. set with an acknowledgement no(set to more than 1 of sequence number and new random seq num) client responds with ACK packet to say successful connect, Final ACK packet features an acknowledgment number ( set to one more than the most recently received sequence number, and the sequence number set to the recently received acknowledgment number.)
+
+16 bit port num differenitate multiple TCP connections. packets include src port and dest port. orts may range from 1 to 65,535 (216 − 1), with lower port numbers being reserved for commonly used protocols and services.
+port 80 - HTTP
+port 21/22 - FTP , SSH
+applications can create network connections using sockets
+
+<h5>User Data Protocol (UDP)</h5>
+
+- UDP doesn't make a gurantee about the order /correctness of packet delivery. No inital handshake to establish connection, allows to send messages (datagrams) asap. if sender wants to communicate via UDP, it only needs a socket.
+- UDP features a 16 bit checksum to verfiy the inegrity og each packet, no seq num scheme, so transmissions can arrive out of order or may not arrive at all. Assumed that checking for missing packets is left to application. UCP can be faster than TCP
+- Often used in time-senstive applications where data integrity is not as important as speed(DNS or VoIP) TCP is used for applications where order and intergirty matter (HTTP,SSH,FTP)
+- Header :
+    - Src port
+    - dest port
+    - length
+    - checksum
+- Payload
+    - Data
+
+<h5>Network Address Translation(NAT)</h5>
+- add network devices to home network, typically don't buy ip address and set up the new address directly on the Internet.
+- *Network address Translation* : allows machines on local-area network to share a single public IP address. Public IP add represents the point of contact with internet for entire LAN, while machines on network have private IP add that only accessible from within network
+- NAT allows an entire network to be asssigned to a single public IP add, widespread use of NAT, delayed inevitable exhaustion of the IPv4 space,
+a lot of address capacity for NAT, because there are a number of private IP addresses that such networks are allowed to use which cannot be used on the (public) Internet.
+- e IP address are of the form 192.168.x.x, 172.16.x.x through 172.31.x.x, and 10.x.x.x.
+- NAT router represents the gate- way between private IP addresses and the public Internet, and this router is responsible for managing both inbound and outbound Internet traffic.
+
+<h6>How NAT Works?</h6>
+- translate by a look up table-> contains entries:
+    - private scr IP
+    - private scr port
+    - dest ip
+    - public src port
+- dynamically rewrite headers of all inbound and outbound tcp and udp packets,
+- machine on internal network attempts to send a packet to an external IP address, the NAT router creates a new entry in the look up table associated with the src machine private ip add, & internal src port of transmitted packet,rewrites the scr ip to be that of NAT device public ip , opens a new public src port, rewrites ip header src port field contain newly opened port. public port and dest ip are recorded with private src ip and private internal port in NAT lookup table. device also adjusts any checksum contained in packet, including used by ip, tcp&udp to reflect changes made, packet is forwared to dest.
+- NAT router check look up table for any entries whose public scr port corresponds to dest port of inbound packet & dest ip address corresponds to src ip on inbound packer. NAT router rewrites ip headers of inbound packet in line with lookup table, packet is forwared to correct private ip add and private port
+- effecrivley manages outbound traffic, several restrictions on inbound traffic, external machine has no way to start a connection with machine on provate network, since internal m doesn't have a oublicy accessible IP address, can be a security feature since no inbound traffic from internet can reach internal network, NAT devices can function as firewalls, blocking risky contact from the external internet
+- violates the ideal goal of end-to-end connectivity for machines on internet by not allowing direct communication between internal and external parties, NAT can cause problems with protcols, if not tcp or udp as a transport layer protocol, cruical in delaying exhaustion of IPv4 address space and simplifying home networking
+
+<h5>TCP Session Hijacking</h5>
+
+<h6>TCP Sequence Prediction</h6>
+- *Session Spoofing* creates a spoofed TCP session instead of stealing an existing one, type of session hijacking, *TCP sequence prediction* attack triws to guess the inital sequence number sent by the sercer at start of a session. Early TCP stacks implemented sequence numbers by using a simple counter that was added 1 with each transmission.Not using any randomness, trival to predict next sequence number, key to attack. Modern TCP stack implementations use pseudo-random numbers generators to determine seqence numbers, makes TCP sequence prediction attack more difficult, not impossible. Following scenarios could happen:
+1. The attacker launches a denial-of-service attack against the client victim to prevent that client from interfering with the attack.
+2. The attacker sends a SYN packet to the target server, spoofing the source IP address to be that of the client victim.
+3. After waiting a short period of time for the server to send a reply to the client (which is not visible to the attacker and is not acted on by the client due to the DOS attack), the attacker concludes the TCP handshake by sending an ACK packet with the sequence number set to a prediction of the next expected number (based on information gathered by other means), again spoofing the source IP to be that of the client victim.
+4. The attacker can now send requests to the server as if he is the client victim.
+
+<h6>Blind Injection</h6>
+above attack only allows one-way communication as attacker cannot receive any replies from the server due to use of the IP spoofing. method may allow an attacker to subvert a system that excutes a certain command based on scr of IP of requester.possible to inject a packet containing a command that creates a connection back to the attacker.
+
+
+<h6>ACK Storms</h6>
+possible side effect of blind injection attack, is that can cause a client and server to become out-of-synchronization with respect to a sequence numbers, as server got a synchronized message, client never actually sent. TCP incopoartes a method for clients & servers to become resynchronized when they go out of step, but it doesn't easy tolerate desyncronization that happens after a blind injection attack. Server and client start sending ACK messages to start using correct sequence numbers, known as ACK Storm, can continue until one of these messages is lost by an accident or a firewall detects an ack storm in progress and discards a bad ack message.
+
+<h6>Complete Session Hijacking</h6>
+attacker on same network segment as target server, and or client, attacker can hijack an tcp session. possible due to packet sniffing to see sequence numbers of packets used to establish session. attacker can inject a packer with high probable sequence number to server useing a spoofed src ip address to be like the client. Used in combination with other network attacks, possibility of an attacker who is in same network segment as target server or client victim allows for an even stronger type of session hijacking attack. an attacker on same network segment as client or server can use packet sniffing to see sequence numbers of packets used to establish a tcp session as in a complete session stealing attack, but he can also sometimes go a step further by creating a man-in-the-middle attack using ARP spoofing method. Once done attacker can perform all subsequent actions as if he were the user, masquerading as, he can intercept all responses from both sides.
+
+<h6>Countermeasures</h6>
+- use encryption & authentication, at network layer suce as IPsec or application layer
+- web sites avoid creating sessions that begin with secure authentication measures but subsequently switch over to unencryted exchanges.
+- trade fair efficiency for security, create a risk with respect a tcp session hijacking attack.
+
+<h4>Denial-of-Service Attacks</h4>
+Bandwidth in a network is finite, number of connections of a web server can maintain to clients is limited. connection to a server needs a minimum amount of network capacity to function. A server has used up its bandwidth or ability of its processors to respond to Requests, additional attempted connections are dropped & potential clients will be unable to access resources provided by server. attacl that is designed to cause a machine or piece of software to be unavailable and unable to perform its basic functionality is known as a denial-of- service (DOS) attack. 
