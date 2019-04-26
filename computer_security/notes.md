@@ -383,4 +383,31 @@ attacker on same network segment as target server, and or client, attacker can h
 - trade fair efficiency for security, create a risk with respect a tcp session hijacking attack.
 
 <h4>Denial-of-Service Attacks</h4>
-Bandwidth in a network is finite, number of connections of a web server can maintain to clients is limited. connection to a server needs a minimum amount of network capacity to function. A server has used up its bandwidth or ability of its processors to respond to Requests, additional attempted connections are dropped & potential clients will be unable to access resources provided by server. attacl that is designed to cause a machine or piece of software to be unavailable and unable to perform its basic functionality is known as a denial-of- service (DOS) attack. 
+Bandwidth in a network is finite, number of connections of a web server can maintain to clients is limited. connection to a server needs a minimum amount of network capacity to function. A server has used up its bandwidth or ability of its processors to respond to Requests, additional attempted connections are dropped & potential clients will be unable to access resources provided by server. attacl that is designed to cause a machine or piece of software to be unavailable and unable to perform its basic functionality is known as a denial-of- service (DOS) attack.
+
+Not concerned with receiving responses from a target, spoofing src ip address is commonly used to obscure the identity of the attacker as well as make mitigation of attack more difficult. Servers can stop DOS attacks by dropping all packets from certain blacklisted ip address, attackers can generate a unique src ip address for every packet sent, preventing target from successfully identifying & blocking attacker. IP spoofing can make it more difficult to target the src of a dos attack.
+
+<h5>ICMP Attacks</h5>
+<h6>The Ping Flood Attack</h6>
+- Ping utility sends an ICMP echo reuqest to a host, returns with ICMP echo reponse.
+- powerful machine sends massive amounts of echo requests to a single victim server
+- attacker can create more ping requests than victim can process & victim has enough network bandwidth to receive all these requests, victim server will be overwhelmed with traffic & start to drop legitimate connections
+
+<h6>The Smurf Attack</h6>
+- takes advantage of misconfigured networks is known as a smurf attack
+- networks feature a boradcast address - user can send packet that is received by every IP address on network.
+- Smurf attacks exploit property by sending ICMP Packets with scr address set to target and with dest address set to broadcast address of network
+- Each packet received by every machine on network at which point every machine sends a reply ICMP packet to indicated src address of target, results in am amplification effect that multiplies number of packets sent by number of machines on network.
+- victmins many be on exploited network or traget, identity of attacker is further obscured
+- to prevent
+    - admin should configure hosts & routers on their networks to ignore broadcasts requests,
+    - routers should be configures to avoid forwarding packets directed to broadcast address, poses a security risk in network can be used a ping flood amplifier, server is relatively weak, wise for it to ignore ping requests to avoid ping floods.
+
+<h5>SYN Flood Attacks</h5>
+to initiate TCP session ,client sends a SYN packet to a server, in response to which the server sends a SYN,ACK packet. This exchange is normally then followed by client sending a concluding ACK packet to server, client nevers sends the concluding ACKm server waits for a certain time out period then discards session.
+
+<h6>SYN Flood Attacks</h6>
+attacker sends a large number of SYN packets to server, ignores SYN/ACK replies, never sends expected ACK packets, attacker initaing attack in practice will use random spoofed src address un SYN packets he sends, so replies are sent to random ip address. attacker sends a large amount of SYN packets with no corresponding ACK packets, server's memory will fill up with sequence numbers that is is remebering in order to match up with TCP sessions with expected ACK packets, never arrive so wasted memory blocks out other legiti ate TCP session requests.
+
+<h6>Defense Against SYN Flood Attacks</h6>
+- *SYN Cookies* server sends a speical crafted SYN & ACK packet, without creating a corresponding memory entry
