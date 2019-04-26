@@ -1,7 +1,9 @@
-## Computer Security
+# Computer Security
 
-<h3>Chapter 1 Fundamental Concepts</h3>
-<h4>1.1 Confidentiality, Integrity, and Availability </h4>
+## Chapter 1 Fundamental Concepts
+___
+
+### 1.1 Confidentiality, Integrity, and Availability 
 
 **C.I.A**
  -  **Confidentiality**
@@ -303,9 +305,11 @@ Takes IP Protocol and gurantees transmission of a stream of bits between two vir
 <h6>Transmission Control Protocol (TCP)</h6>
 TCP session starts with connection between sender & receiver, parties can then communicate. Ensures reliable transmission by a sequence number that is initalised during the three-way handshake, Transmission features an incremented sequence number, each part is aware when packets arrive, out of order all or not at all,
 Incoporates a cumulative acknowledge schemem two TCP sessions , sender and receiver communicating via their established TCP connection.
-the sender sends the receiver a specified amount of data, the receiver will confirm that it has received the data by sending a response packet to the sender with the acknowledgment field set to the next sequence number it expects to receive. If any information has been lost, then the sender will retransmit it.
-Manages amount of data that can be sent by one party while avioding overwhleming, processing resources of other or bandwidth of network itself(*flow control*) use *sliding window protocol* -> receiver informs sender of size of receive window(number of bytes of data willing to accept befor sender must pause and wait for a response), sender keeps track of value of last thing.  When sending , the sender checks the sequence number of packet and continues only if number is less than last acknowedlenge plus current size of recevive window. Otherwise it waits, stores the number shifting sliding window of sequence numbers. Sender sets a time so if no acknowledgment is received before the times expires, sender assumes data loss and retransmits
-Checksum field to ensure correctness. not intended to be cryptographically secure, detect inconsistencies in data due to network erros rather than tamoering.
+the sender sends the receiver a specified amount of data, the receiver will confirm that it has received the data by sending a response packet to the sender with the acknowledgment field set to the next sequence number it expects to receive. 
+If any information has been lost, then the sender will retransmit it.
+Manages amount of data that can be sent by one party while avioding overwhleming, processing resources of other or bandwidth of network itself(*flow control*) use *sliding window protocol* -> receiver informs sender of size of receive window(number of bytes of data willing to accept befor sender must pause and wait for a response), sender keeps track of value of last thing.  When sending , the sender checks the sequence number of packet and continues only if number is less than last acknowedlenge plus current size of recevive window. 
+Otherwise it waits, stores the number shifting sliding window of sequence numbers. Sender sets a time so if no acknowledgment is received before the times expires, sender assumes data loss and retransmits
+Checksum field to ensure correctness. not intended to be cryptographically secure, detect inconsistencies in data due to network erros rather than tampoering.
 
 <h6>Congenstion Control</h6>
 attempt to prevent overwhelming a network with traffic which could lead in poor transmission rates and dropped packets. congenstion control is not implemented into tcp packets but based on the info gathered by keeping track of acknowledgements for prev sent data and time required for certain operations. TCP adjusts data transmission rates using this information to prevent network congestion.
@@ -406,8 +410,58 @@ Not concerned with receiving responses from a target, spoofing src ip address is
 <h5>SYN Flood Attacks</h5>
 to initiate TCP session ,client sends a SYN packet to a server, in response to which the server sends a SYN,ACK packet. This exchange is normally then followed by client sending a concluding ACK packet to server, client nevers sends the concluding ACKm server waits for a certain time out period then discards session.
 
-<h6>SYN Flood Attacks</h6>
+<h6>How a SYN Flood Attack Works</h6>
 attacker sends a large number of SYN packets to server, ignores SYN/ACK replies, never sends expected ACK packets, attacker initaing attack in practice will use random spoofed src address un SYN packets he sends, so replies are sent to random ip address. attacker sends a large amount of SYN packets with no corresponding ACK packets, server's memory will fill up with sequence numbers that is is remebering in order to match up with TCP sessions with expected ACK packets, never arrive so wasted memory blocks out other legiti ate TCP session requests.
 
-<h6>Defense Against SYN Flood Attacks</h6>
-- *SYN Cookies* server sends a speical crafted SYN & ACK packet, without creating a corresponding memory entry
+<h6>Defenses Against SYN Flood Attacks</h6>
+- SYN Cookies are implemented, rather than dropping connections as memory is filled, server sends crafted SYN/ACK packet without creating a corresponding memory entry. Sever encodes info in TCP seq number as follows:
+    - first 5 bits : timestamped, counter incremented every min mod 32
+    - next 3 bits : encoded value, max segment size of transmission
+    - final 24 bits : MAC of the server, client ip address, server client port numbers , prev time stamp using secret key 
+
+<h6>How SYN Cookies work</h6>
+legit client must reply with a sequence number eqal to pre sent sequence num plus 1,when client replies with ack packet server subtracts 1, to obtain prev sent sequence, compares first 5 bits with current timestamp to check if connection has expired. Server recomputes 24 bit mac usig known IP and port info and compares value encoded in seq number. server decodes middle 3 bits to finish reconstruct syn quee entru, connection can countinue, If good, with syn cookie check, server initaties tcp session.
+
+<h6>SYN Cookies Limitations </h6>
+- max segment size only be 8 possible values, most encode in 3 bits
+- SYN Cookies don't allow use of TCP options field, infor stored alongside SYN queue entries 
+
+<h5>Optimistic TCP ACK Attack</h5>
+num of tcp packets allowed outstanding during tcp communication session before requiring an ACK - congenstion window. Sever receives ACKs from a client, dynmaically adjusts congestion window size, w to reflect estimated bandwith avail
+
+window size grows when acks are received, shrinks when segments arrive out of order, or not received at all, indicating missing data. TCP helps to keep network congestion down, while also trying to push data through the internet as quickly as possible without overloading the capacity of routers along path that the packets are travelling . Congenstion control nature of TCP automatically adjusts as network conditions change, shrinking congestion win when packets are lost and increase when sucessful acknowldge ew
+
+<h6>How the Optimistic TCP ACK Attack Works </h6>
+denial or service attack, makes congenstion control mechanism of TCP work agaisnt itself.rogue client tries to make server up sending rate until runs out bandwidth. if performed with many servers , creat internet wide congestion. Send ack packets before they have been received, to make server up transmission speed. 
+
+<h6>Defense Against the Optimistic TCP ACK Attack </h6>
+implement max taffic limits per client at server level, block traffic whose pattern indicate denial of service attempts
+
+<h5>Distributed Denial of Service</h5>
+server tech allows website to handle enormonus amount of bandwidth. 
+*distributed denial-of-service (DDOS)* attack, malicious users levergae power of many machines to direct traffic against single website. Use botnets
+
+- servers incoporate DOS protection mechanisms that analyze incoming traffic and drop packets from srcs consuming bandwidth. IP spoofing may make DDOS prevention more difficult
+
+<h5>IP Traceback</h5>
+determining the actual origin of a packet on the Internet, without relying on the IP source field contained in that potentially falsified packet.
+
+ip traceback tech relied on logging each packet forwareded by each router. significant space requirements on routers which may not have incentive to cooperate.
+
+*packet marking* routing mark forwarded packets with info related to the path that packet has taken up to that point.
+
+*node sampling* single field in ip packet that has only enough room for one address is used. Each router overwrites this field of each packet with own address with some probability p.
+
+## Crypography 
+___
+
+< used for confidentiality, integrity, authentication,
+anonymity
+
+### Historical Ciphers 
+
+- *Rail fernce Cipher*
+  > shared secret key, plaintext written in columns of size k. The ciphertext is the concatenation of the resulting rows
+  > Decryption: ciphertext written in rows of size $\frac{\mod{c}}{k}$
+  ***  small key space size $k<\mod{c} \Rightarrow$ brute force attack***
+
