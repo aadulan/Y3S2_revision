@@ -670,6 +670,8 @@ ___
 
  ## Chapter 8.2 Public Key Crytography 
 
+ a and b in $\mathbb{Z}$ are relative primes if they have no common factors
+
  ### Modular Arithmetic
 
  > $\mathbb{Z}_n = {0,1,2,..,n-1}$ 
@@ -759,6 +761,382 @@ Attack
 - When Alice sends the value $X = g^x \mod p$ to Bob, the attacker reads it and replaces it with $T = g^t \mod p$.
 - When Bob sends the value $Y = g^y mod p$ to Alice, the attacker reads it and replaces it with $S = g^s mod p$.
 - Alice and the attacker compute key $K_1 = g^{xs} \mod p$
+- Bob and the attacker compute key $K_2 = g^{yt} mod p$
+- When Alice sends a message to Bob encrypted with the key K1, the attacker decrypts it, reencrypts it with the key K2 and sends it to Bob
+- When Bob sends a message to Alice encrypted with the key K2, the attacker decrypts it, reencrypts it with the key K1 and sends it to Alice
+
+### 8.5.2 Details for RSA
+___
+Fermat's Little Theorem
+>  Let p be a prime number and g be any positive integer less than p, then $g^{p-1} \mod p=1$ 
+___
+Euler's Theorem
+> Let x be any positive integer that is relatively prime to integer n >0 then $x^{\phi(n) \mod n =1}$
+___
+Corollary 
+> Let x be a positive integer relatively prime to n, and k be any positive integer. Then $x^k \mod n = x^{k \mod \phi(n)} \mod n$
+___
+Euclidean Algorithm:
+> The GCD d of two numbers, a>0, and $b \geq 0$ is the samlled positive integer d such that $d=ia+jb$ for integers i and j 
+ 
+ Extended algorithm
+  first test if b is zero otherwise recurive call algorithm
+  ___
+  Efficiency of extended euclidian algorithm, running time of algorithm $\ceil{\log{a}}$ 
+  ___
+  Modular Exponentiation 
+  Running time is $\ceil{\log{n}}$
+___
+Repeated Squaring 
+using linear number of multiplications rather than an exponentiation
+___
+Primality Testing 
+> Given a integer n, want to determine if n is prime or not 
+___
+How RSA is Typically Used
+
+1. Encrypt a secret key, K, with the RSA cryptosystem for the AES symmetric cryptosystem.
+2. Encrypt with AES using key K.
+3. Transmit the RSA-encrypted key together with the AES-encrypted
+document.
+
+## Chapter 8.4 Digital Signatures 
+
+> *digital signature* is a way for an entity to demonstrate the authenticity of a message by binding its identity with that message.
+
+- *Nonforgeability*. It should be difficult for an attacker, Eve, to forge a signature, $S_{Alice}(M)$, for a message, M, as if it is coming from Alice.
+- *Nonmutability*. It should be difficult for an attacker, Eve, to take a signature, $S_{Alice}(M)$, for a message, M, and convert $S_{Alice}(M)$ into a valid signature on a different message, N.
+- if a digital signature scheme acheives these properties, actually achieves *nonrepudiation* , should be difficult for Alice to claim she didn’t sign a document, M, once she has produced a digital signature, $S_{Alice}(M)$, for that document.
+
+### The RSA Signature Scheme
+
+> Any third party can verify signature by testing the following information : is it true that $M=S^\ell \mod n$
+> Verification method follows from $de \mod \phi(n)=1$
+
+-> RSA signature does not acheive non-mutability
+
+### The Elgamal Signature Scheme
+
+> document signatures are done throught randomization.
+> To sign a message M, Alice geenrates a fresh one time use random number k and computes the following two numbers 
+$a=g^k \mod p$ and $b=k^{-1}(M-xa)\mod(p-1)$
+
+(a,b) is Alice signature on the message M, verify the signature(a,b) on M, bob performs the following test:
+Is it true that $y^aa^b \mod p = g^M \mod p$
+> based on compuation of b depends on both random number k, and Alice's secret key x
+
+### Using Hash Functions with Digital Signatures 
+
+> inefficient use of signatures if message is long, digital singatures shcemes are usally applied to cryptographic hases of messages not to actual messages.
+
+### Public Key Cerficates 
+
+>  CAs issue certificates to participants on their
+public key
+
+contains :
+- public key 
+- subject 
+- signature 
+
+X.509 certificates : defines a framework for the provision of authentication services
+
+## Chapter 6.1 The Application Layer and DNS 
+
+### A sample of Application Layer Protcols 
+___
+*Domainnamesystem(DNS)* 
+> This is the protocol that allows us to use intuitive domain names to refer to Internet hosts rather than using IP addresses. Most application programs and other application-layer services rely on DNS.
+___
+*Hypertext transfer protocol (HTTP)*
+> This is the protocol used to browse the Web.
+___
+*SSL/TSL*
+> This is the protocol used for secure, encrypted browsing (i.e., with HTTPS).
+___
+*IMAP/POP/SMTP*
+> These are protocols that make Internet email pos- sible.
+___
+*File transfer protocol(FTP)*
+> This is an old,but still used,protocol that provides a simple interface for uploading and downloading files. It does not encrypt data during transfer.
+___
+*SOAP*
+>This is a more recent protocol for exchanging structured data as a part of the web services paradigm.
+___
+*Telnet*
+> This is an early remote access protocol. Like FTP, it doesn’t encrypt connections.
+___
+*SSH*
+> This is a more recent secure remote access and administration protocol.
+
+### The Domain Name System (DNS)
+
+> Resolving domain names to ip address 
+
+- arranged in a hierarchy that can be examined from left to right
+- top-level domain
+- subdomain
+
+#### Domain Name Registration
+
+- Generic top-level domain: such as .com, .net 
+- contry-code top level domain .pt(portugal) with restricted to entities within a specific country
+[<scheme>://<user>:<password>@<host>:<port>/<url-path>?<query-string>]
+
+Domain names are registered and assigned by *domain-name regis- trars* accreditied by *Internet Corporation for Assigned Names and Numbers (ICANN)*
+
+Cybersquatting or domain squatting has become common, a person registers domain name as desirable and cam make money.
+
+#### How DNS is Organized 
+
+> Hierachical nature of domain names reflected in way the internet infrastructure supporting DNS systemm works.
+
+- Resolve a domain name to corresponding IP address DNS hierachy is used to query known as name servers. At the top of name server hierachy, they are root name servers which are responsible for top-level domains such as .com, .it 
+- Root name servers store root zone database of records, indicating authoritative name server of each top level domain
+
+#### How DNS Queries Work 
+
+- Client wishes to resolve a domain name to ip, contacts designated name server assigned to the machine.
+-  server issues a DNS query to a root name server, it responds with address fo server that is authoritative for the next level of hierarchy.
+- this sequence of requests and responses continues until a name server responds with the IP address of the requested domain. This final name server is therefore the authoritative responder for the requested domain name
+
+#### DNS Packet Structure 
+
+> queries and replies are transmitted via single UDP packet with tcp being used as a subsitue for requests or replies exceeding 512 bytes 
+
+- Header : includes 16 bit query identifier(transaction identifier) 
+- Query: sequence of questions each conisting of domain name quiered and type of record requested, query id is seletced by client sending the query and is replicated in the response from the server 
+- Sequence of DNS records 
+    - Name field of variable length 
+    - 2 byte type field indicates the ytpe of DNS Record,A standard domain-to-address resolution is described by an A record, but other types exist as well, including NS records (providing information about name servers), MX records (providing information about email resolution), and several other less commonly used record types.
+    - byte CLASS field denotes the broad category that the record applies to, such as IN for Internet domains.
+    - 4-byte TTL field specifies how long a record will remain valid, in seconds.
+    - 2-byte RDLENGTH field indicates the length of the data segment, in bytes.
+    -  variable-length RDATA segment includes the actual record data. For example, the RDATA segment of an A record is a 32-bit IP address.
+
+#### DNS Caching 
+
+> central service utilized by billions of machines connected to the internet, without any additional mechanisms, would place incredible burden on high-level name servers
+
+- DNS cache, table of recently received DNS Records.
+- Name server first checks the cache and returns to the client the requested IP if a record is found, designatined server queries the root server and resolves the domain name.
+- alue known as the time-to-live (TTL) determines how long a DNS response record remains in a DNS cache. This value is specified in the DNS response, but administrators can configure local settings that override the provided TTL values. Once a cached record has expired, the query process resorts back to asking a higher-level name server for a response
+  
+### DNS Attacks 
+
+#### Phraming and Phishing 
+
+> DNS subverted so that an attacker could control how DNS requests resolve
+> attack known as pharming, resolve domain to site which appeard dientical to requested site but instead designed for malicious intent
+
+#### Other Pharming Attacks
+
+> distinguish between fake and real sites 
+> Email relies on speicalized DNS entries known as MX records 
+> ain name used for operating system updates with a malicious IP address, causing victims to automatically download
+
+#### DNS Cache Poisoning 
+
+> attacker attempts to trick a DNS Server into caching a false DNS Record
+
+- attacker decided to launch DNS cache poisioning attack against an ISP DNS Server
+- Eve sends a DNS response to her own query spoofing the src ip address
+- ISP server accepts eve's foged response 
+
+An attacker overcomes:
+- attacker must issue a response to her own DNS query before authoritative name server is given a chance to respond
+- each DNS request is given a 16-bit query ID. If the response to a query is not marked with the same ID as its corresponding request, it will be ignored
+
+#### DNS Cache Posioning and the Birthday Paradoz 
+
+> guessing is actually more likely if the attacker issues a lot of fake requests and responses to the same domain name lookup
+
+Increase in attack success probability from an increases in fake reuqests in known as brithday paradox 
+
+#### Subdomain DNS Cache Poisoning 
+>above guessing attack is extremely limited because of its narrow time frame
+> if in cache uses that record rather than going to name server, attacker can only make so much guesses 
+
+- each failed guessing attempt, valid reponse will be caches bu tagerted name server, so attack must wait until it expires
+
+new subdomain DNS cache poisoning attack, issues requests for a different nonexistent subdomain for target domain, don't exist, ignores reuqests. he attacker issues responses for each of these requests, each with a guessed transaction ID. Because the attacker now has so many chances to correctly guess the response ID and there is no competition from the target domain to worry about, it is relatively likely that the attack will be successful
+
+#### Using Subdomain Resolution for DNS Cache Poisoning
+
+> attacker's response include a glue record that resolves the name server of the target domain to an attacker-controlled server
+> sucessfully guessing the transaction ID the attacker, can control not just one DNS resolution for a nonexistent domain but all resoultions for the entire trarget domain 
+
+#### Client-Side DNS Cache Poisoning Attacks
+
+> attacker can construct a malicious web site containing image tags which issue a request to a different non existent subdomain, of the domain attacker wishes to posion, 
+
+#### Identifying the Risks of Subdomain DNS Cache Poisoning
+
+- ReRelying on a 16-bit number as the only mechanism for verifying the authenticity of DNS responses, which is insufficient for security
+- Having the response for a nonexisting subdomain request be a nonre- sponse
+
+#### Some Defenses Against Subdomain DNS Cache Poisoning
+
+- reduce chances of succesful attack, many DNS implementations incoporate source-port randomization (SPR), the practice of randomizing the port from which DNS queries originate (and must be replied to)
+- decreases likelhihood of succesfully generating a false reply 
+
+### DNSSEC
+
+> set of security extensions to the DNS protcol that prevent attacks such as cache poisoning by digitally signing all DNS replies using public-key cryptography
+
+- - deployed at both client and server 
+- reuquest packet indicates this is supported
+-  If the queried server also supports DNSSEC, then a resource-record signature (RRSIG) record is returned alongside any resolved queries
+- contains a digitak signature of returned records computed by geenrating a hash of returned products with authoriative name sevrer key.
+- response to client contains a DNSKEY record containing public key of name server
+- verify authenticty 
+- establish trust in the name server 
+- To perform signature verification, the client uses the parent name server’s DNSKEY to decrypt the RRSIG record, compares this to the DS record, and finally compares the DS record to the child name server’s DNSKEY
+-  until a “trusted key” that the client has existing knowledge of and does not need to verify is encountered
+
+## Chapter 6.3 Tunneling 
+
+> communication between a client and server is automatically is encrypted, reuqires set up
+
+### Secure Shell (SSH)
+
+> SSH was created to use symettic and public key cryptography to communicate across the internet using an encrypted channel
+
+- SSH protocol is used for a variety of tasks in addition to secure remote administration, including file transfer through the simple Secure Copy Protocol (SCP) or as part of the more full-featured Secure File-Transfer Protocol (SFTP)
+
+- clients connects to the server via TCP session
+- client and server exchange info such as protcol ver and supported encryption
+- client and server initate a secret-key exchange to establish a shared secret session key
+- server sends list of acceptable forms of authentication which client will try in sequence 
+  - If public-key authentication is the selected mechanism,the client sends the server its public key.
+   - The server then checks if this key is stored in its list of authorized keys. If so, the server encrypts a challenge using the client’s public key and sends it to the client.
+   - The client decrypts the challenge with its private key and responds to the server, proving its identity.
+- authentication has been successfully completed, the server lets
+the client access appropriate resources, such as a command prompt
+
+### IPsec
+
+> consists of several protcols, addressing different secuirty needs, operate in one of two modes, transport mode or tunnel mode. 
+
+- transport mode, additional IPsec header information is inserted before the data of the original packet, and only the payload of the packet is encrypted or authenticated
+- tunnel mode, a new packet is constructed with IPsec header information, and the entire original packet, including its header, is encapsulated as the payload of the new packet. Tunnel mode is commonly used to create virtual private networks (VPNs)
+
+- two parties communcaiting must first set up a set of a security associations(SAs) 
+- pieces of info that secribe how secure communications are to be conducted between two parties 
+- contain keys , uni directional, 
+- Communicating parties store SAs in a security association database (SADB)
+- protection for outgoing packets and verifies or decrypts incoming packets by using a security parameter index (SPI) field stored in the IPsec packet header, along with the destination or source IP address, to index into the SADB and perform actions based on the appropriate SA.
+
+#### Internet Key Exchange(IKE)
+
+> handle negotiations of SAs
+
+1. inital security association is established to encrypt subsequent IKE communications
+2. encrypted channel is used to define SAs for the IPsec traffic
+
+#### Authentication Header (AH)
+
+> used to authenticate the origin and gurantee the data integrity of IPsec packets 
+
+#### Components of the Authentication Header
+
+- secrity parameter index used to identify security assocation associated with packet
+- an “authentication data” field that contains an integrity check value (ICV)
+- ICV is computed by hashing the entire packet, including the IPsec header
+
+
+#### Enscapsulating Security Payload
+
+- H places a header before the payload or original packet, ESP encapsulates its payload by providing a header and a “trailer.” To provide encryption, ESP uses a specified block cipher to encrypt either the entire original IP packet or just its data, depending on whether the tunnel or transport mode is used. ESP also provides optional authentication in the form of an “authentication data” field in the ESP trailer
+- doesn't prtotect ip header from tampering allows NAT devices to rewrite scr ip addtess
+
+### Virtual Private Networking (VPN)
+
+> allows private net- works to be safely extended over long physical distances by making use of a public network, such as the Internet, as a means of transport
+
+  #### Remote Access VPNs
+
+  > allow authorized clients to access a private net- work that is referred to as an intranet. For example, an organization may wish to allow employees access to the company network remotely but make it appear as though they are local to their system and even the Internet itself. To accomplish this, the organization sets up a VPN endpoint, known as a network access server, or NAS. Clients typically install VPN client software on their machines, which handle negotiating a connection to the NAS and facilitating communication.
+
+  #### Site to site VPN
+
+  >  provide a secure bridge be- tween two or more physically distant networks. Before VPN, organizations wishing to safely bridge their private networks purchased expensive leased lines to directly connect their intranets with cabling.
+
+Different Implementations 
+
+- point-to-point tunneling protocol (PPTP) : works by establishing a connection using the peer- to-peer (PPP) link-layer protocol, then encapsulating PPP frames, which are encrypted using Microsoft Point-to-Point Encryption (MPPE), inside IP packets that can be sent across the Internet
+-  Layer 2 Tunneling Protocol (L2TP) : both header and payload, is encapsulated within a UDP datagram,  header and payload, is encapsulated within a UDP datagram. Within the L2TP packet, a number of link-layer protocols can be encapsulated, including PPP and Ethernet. L2TP is commonly used in con- junction with IPsec to ensure authentication, integrity, and confidentiality.
+
+### Some Risks in Allowing for VPNs and Tunneling
+
+> payloads of a series of network packets are en- capsulated in a different delivery protocol that might otherwise be blocked by a firewall
+> an information-leakage attack, such as sending company secrets out of a compromised network using HTTP packets, becomes more difficult to detect when protocols relying on tunneling are used
+
+## Usable Security 
+
+> = Humans + Security Technology
+> think what skills they have and what they don't have 
+
+## Chapter 6.2 Firewalls 
+
+> firewalls can be employed to filter incoming or outgoing traffic based on a predefined set of rules that are called firewall policies 
+
+- shiled internal network users from malicious attackers on internet
+- censorship 
+- hardware or software, typically deployed at perimeter of an internal network at point where network connects to internet
+
+### Firewall Policies 
+
+Packets flowing through a firewall can have one of three outcomes:
+• _Accepted_: permitted through the firewall
+• _Dropped_: not allowed through with no indication of failure
+• _Rejected_: not allowed through, accompanied by an attempt to inform the source that the packet was rejected
+
+#### Blacklists and Whitelists 
+
+- effectively minize vulnerability to the outside world while maintaining the desired functiality for machines in trusted internal network
+-  network administrators choose a blacklist approach, or default-allow ruleset
+   -  all packets are allowed through except ones that fit rules fitted in blacklist
+   -  more flexible in ensuring service not interuppted
+- implement a white list or default-deny policy, in which packets are dropped or rejected unless they are specifically allowed by the firewall
+  - a network administrator might decide that the only legitimate traffic entering the network is HTTP traffic destined for the web server and that all other in- bound traffic should be dropped
+  - configuration requires greater familiarity with protcols used by internal network, provided the greatest possible caution in decding which traffic is acceptable
+
+### Stateless and Stateful Firewalls
+
+#### Stateless Firewalls 
+
+> doesn't maintain any remebered context with respect to the packets it is processing, treats each packet attempting to travel through it in isolation without considering pakcets that it has previsouly 
+> don't have any memory decidcated to determining if a given packey is aprt of an existing connection
+>  Stateless firewalls simply inspect packets and apply rules based on the source and destination IP addresses and ports.
+
+#### Blocking Undesired Packets 
+
+ll traffic from a web server originating at the default port for web servers would be allowed through the firewall to the user’s machine, which may be undesirable
+
+observing that the firewall does not need to allow TCP packets marked with just the SYN flag to reach the user
+
+estriction would prevent outside parties from initiating TCP connections to an internal machine, it would not prevent them from probing the network with other packets not marked with the SYN flag.
+
+#### Stateful Firewalls 
+
+can tell when packets are part of legitimate sessions originating within a trusted network
+
+stateful firewalls maintain tables containing information on each active connection, including the IP addresses, ports, and sequence numbers of packets
+
+these tables, stateful firewalls can solve the problem of only allowing inbound TCP packets that are in response to a connection initiat- ed from within the internal network
+
+allow administrators to apply more restrictive rules to network traffic and create more effective policies for inbound versus outbound traffi
+
+n- age traffic based on the actual contents of packets entering and exiting a network rather than merely considering the origin and destination. This is possible through the use of application-layer firewalls
+
+##
+
+
+
+
+
+
 
 
 
