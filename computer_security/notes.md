@@ -455,13 +455,324 @@ ip traceback tech relied on logging each packet forwareded by each router. signi
 ## Crypography 
 ___
 
-< used for confidentiality, integrity, authentication,
+> used for confidentiality, integrity, authentication,
 anonymity
 
 ### Historical Ciphers 
 
-- *Rail fernce Cipher*
+- *Rail fence Cipher*
   > shared secret key, plaintext written in columns of size k. The ciphertext is the concatenation of the resulting rows
-  > Decryption: ciphertext written in rows of size $\frac{\mod{c}}{k}$
-  ***  small key space size $k<\mod{c} \Rightarrow$ brute force attack***
+  
+    - Decryption: ciphertext written in rows of size $\frac{\mod{c}}{k}$
+   - small key space size $k<\mod{c} \Rightarrow$ brute force attack
+- *Substitution cipher*
+    > shared secret: a permutation $\omega$ of the set of characters, Encryption: apply $\omega$ to each character of the plaintext.
+
+    - Decryption: apply $\omega^{-1}$
+to each character of the plaintext.
+  - break using frequency of letters,diagrams, triagrams, expected words
+- *Vigenere cipher*
+    > shared secret key: a word w over the English alphabet,break the plaintext $m = m_1 . . . m_n$ in $\frac{m}{w}$ encrypt each block as follows : $m_{i+1} + w_1 =m_{i+1} + w_1$ mod 26
+
+    - Decryption: break the ciphertext $c = c_1 . . . c_n$ in $\frac{m}{w}$ blocks, and decrypt each  block as follows $c_{i+1}-w_1= this$
+    - Can perform frequency analysis on this 
+
+### Chapter 8.1.3 One time pads 
+
+> same approach as vingrene cipher, use a block of keys $(k_1,k_2,k_3,..k_m)$ to encrypt plaintext M of length n
+
+- length, m, of the block of keys has to be the same as n, the length of the plaintext.
+- Each shift amount, $k_i$, must be chosen completely at random.
+- No statistical analysis can be done 
+- Perfect secrecy 
+
+
+#### Binary One-Time Pads 
+
+- view plaintext messgae M as binary string of length n, view pad P to be a random binary string of length n, 
+$C= M \oplus P$
+- Can recover plaintext from ciphertext using $M= C \oplus P$
+
+### Chapter 8.1.4 Pseudo-Randomm Number Generators 
+
+#### The Linear Congruential Generator
+ > numbers its generates are uniformly distributed
+
+ start with a random number $x_0$ (seed) generate the next number $x_{i+1}$ according to this :
+ $x_{i+1} =(ax_1 + b)mod$n assume $a>0$ and $b \geq 0$ a and n are relatively prime, can prove unformly distrubuted.
+
+#### Security Properties for PRNG's
+
+- should be difficult to predict next number from prev number.
+- numbers will start to repeat itself after period has finished 
+
+___
+### Stream Ciphers
+
+Kerckhoff’s principle
+- Encryption and Decryption algorithms should be made public 
+- Security relies on secrecy of key 
+- subject to two time pad attacks 
+
+### Block Ciphers 
+> A block cipher with parameters k and $\ell$ is a pair of deterministic algorithms (E, D) such that ption
+- Encryption E : ${0,1}^K \times {0,1}^\ell \Rightarrow {0,1}^\ell$
+- Decryption D :  ${0,1}^K \times {0,1}^\ell \Rightarrow {0,1}^\ell$
+
+### 8.1.6 The Advanced Encryption Standard(AES)
+
+AES is a block cipher operates on 128-bit blocks, designed to be used with keys that are 128, 192 and 256 bits long, yielding ciphers known as AES-X
+
+#### AES Rounds 
+
+128 bit verison of AES encryption algorithm in 10 rounds. performs an invertible transformation on a 128 bit array called state,. Inital state is $X_0$ is XOR of the plaintext with the key K: $X_0= P \oplus K$
+
+Round i(i=1..10) receive state $X_{i-1}$ as input and produce state $X_i$. ciphertext C is the output of the final round: $C = X_1$
+
+Each round is bulit from four basic steps 
+1. *SubBytes step*:* an S-box substitution step
+2. *ShiftRows step*: a permutation step
+3. *MixColumns step*: a matrix multiplication (Hill cipher) step
+4. *AddRoundKey step*: an XOR step with a round key derived from the 128-bit encryption key
+
+#### Implementation of AES
+
+optimised for speed of excution and use serveral look up tables to implement the basic steps of each round.
+Look up tables stores all possible values of a function into an array that is indexed by the input of the function.
+
+#### Attacks on AES
+
+*Timing attack* on high performance software implementation of AES were independlty discovered in 2005.
+based on fact that sache of processor where the AES algorithm is excuted will store portions of look up tables used. Acessing cache faster than accessing memory, time takes to execute algorithm using same key on a series of known cipher texts, attacker can eventually learn key
+
+attacker and AES excuted on same machine, key can be recovered in less than a second, attacker and AES computation on different machines, recovering key takes several hours,defend against timing attacks,
+
+AES should be implenented in a way that the execution time remains constant, 
+
+### 8.1.7 Modes of Operation 
+
+#### Electronic Codebook (ECB) Mode 
+
+> simple encryption for a block cipher to encrpty each block independently. $C_i = E_k(B_i)$
+
+- simplicity, can tolerate the loss of a block
+- resilience to block loss comes from the fact that deceypting the ciphertext for a block, $B_1$ does not depend in any way on the block $B_{i-1}$
+- disadvan determinstic , each plaintext has unique associated ciphertext the ECB mode may reveal patterns
+
+#### Cipher Block Chaining (CBC Mode)
+ 
+ > avoids revelations of patterns in a sequence of blocks in cipher block chaining mode $C_1=E_k(B_i\oplus C_{i-1})$ B_1 is exclusive-ored with initalization vector C_0
+
+ - advan
+    - identical blocks appear at different places in input sequence, likely to have differebt encryptions in ourput sequence. 
+    -  doesn not allow the encryption of blocks in a sequence to be done independently
+    - decrypt can begin in parallel is all cipher text blocks are available
+  
+#### Cipher Feedback (CFB) Mode
+
+> block encryption is similar to that of the CBC mode, B_i involves the encryption $C_{i-1}$. Formula is $C_i=E_k(C_{i-1}) \oplus B_i$
+
+- decryption involves encryption of (i-1)st ciphertext
+
+#### Ouput Feedback (OFB Mode) 
+
+> sequence of blocks is encrypted much as one time pad, sequence of blocks that are geenrated with block cipher. Encryption algortihm begins V_0 formula becomes $V_i = E_k(V_{i-1})$ which encryted becomes $C_i = V_i \oplus B_i$
+
+- tolerate block losses, performed in parallel
+
+#### Counter (CTR) Mode
+
+> start with random speed, compute the ith offset vector according to formula $V_i = E_k(s+i-1)$, encytpiton is done by $C_i = V_i \oplus B_i$
+
+- generation of pad vectors as well as encryption and decryption, done in parallel
+
+### 8.5.1 Details for RES
+
+> 128 bit blocks, 16 bytes of 8 bits each arranged in a 4x4 matrix
+
+#### SubBytes Step
+
+> each byte in matrix is sub with replacement byte by S-box ( look up table) for mathematical equation that operates in an esoteric number known as GF(2^8)
+
+#### ShiftRows Step
+
+> simple permutaion, has effect of mixing bytes in each row , amounts to a cyclic shift 
+
+#### MixColumns Step 
+
+> mixes up info in each column of 4x4 matrix, from shiftrow step, mixing by application what amounts to a Hill-cipher matrix multiplication transformation applied to each column.
+
+- arthimetic used to evaluate the polynoimal is modulo 2.
+    - addition is XOR 
+    - multiplication is AND
+
+#### AddRoundKey Step
+
+> exclusive-or result from prev steps with a step of keys derived from 128 bit secret key
+
+#### AES Key Schedule 
+
+> using pseudo- random number generator 
+
+4x4 matrix, applied to plaintext directly before any of the steps in round 1 is simple
+
+secret key, K divided into 16 bytes and arranged into a 4x4 in column major ordering 
+
+round 0 key matrix, refer to column as W[0], W[1], W[2], ....
+
+ Might need to go through again 
+
+ ## Chapter 8.3 Cryptohash functions 
+
+ ### Properties and Applications
+
+ > one way, given a message M, should be easy to compute a hash value H(M) from that message 
+
+ given only a value x, should be difficult to find a message such that X=H(M)
+
+ Standard hash SHA-256 produces has values for 256 bits
+
+ Applications include:
+ - Commitments
+ - File intergrity
+ - Password verfication
+ - Key derivation
+ - 
+
+ #### Collision Resistance 
+
+ > hash function, H, is a mapping of input strings to smaller output strings.
+___
+ > A function f is collision resistant if there is no efficient algorithm that
+can find two messages $m_1$ and $m_2$ such that $f(m_1)$ = $f(m_2)$
+___
+
+ - H has *weak collision resistance* if any given message M, computaitonally diffcicult to find another message.
+ - H has *strong collision resistance* if it has computationally difficult to compute two distinct messages $M_1$ and $M_2$ such that $H(M_1)=H(M_2)$
+
+#### The Merkle-Damga ̊rd Construction
+
+> common structure for hash function to use a a bulding block *cryptographic compression function C(X, Y)* X has fixed length m and Y has fixed length n, produces a hash value of length n
+
+- Messgae M , divide into blocks of length m, last block padded with bits to make m. 
+- Apply compression function C to first block $M_1$ , fixed string length v of length n, known as initalization vector -> $d_1 = C(M_1,v)$, apply compression fucntion to next one $d_2= C(M_2,d_1)$
+- attacker finds collision between two different messages $M_1$ and $M_2$ , then can form other arbitray collisions. 
+ $H(M_1 || P)=H(M_2 || P)$
+
+ #### Practical Hash Functions for Cryptographic Applications
+
+> SHA-256 and SHA-512
+> MD5 hash function, considered insecure as several attacks
+
+ ### Birthday Attacks
+
+ > Brute force way of finding the problem
+
+ ## Chapter 8.2 Public Key Crytography 
+
+ ### Modular Arithmetic
+
+ > $\mathbb{Z}_n = {0,1,2,..,n-1}$ 
+
+ #### Modulo Operator
+
+ > x modulo n = a , remember to take the remainder 
+
+ #### Modular Inverses 
+
+ > $xy$ mod $n=1$
+
+ #### Modular Exponentiation
+
+ > $x^y$ mod n
+
+ ### The RSA Cryptosystem
+
+ > plaintext and ciphertext message blocks as large numbers using thousands of bits.
+ > encryption and decryption done using modular exponentiation, based on Euler's Thm
+
+ #### Encryption and Decryption
+
+ Receiver BOb to create public & private keys,
+
+ > generate two large prime numbers p and q setting n = pq
+
+ > picks a number, e that is relatively prime to $\phi(n)$, computes $d=e^{-1} mod \phi(n)$
+
+ > public key is pair (e,n) and private key is d
+
+ > Alice can encrypt a message M, $C=M^{\ell}$ mod n
+
+ > decrypt the cipher text C, Bob performs a modular exponentiation 
+    $C^d$ mod n
+
+ #### Security of the RSA Cryptosystem
+
+ > based on difficulty on finding d, given e and n 
+ > $\phi(n)=(p-1)(q-1)$, easy to compute d from e
+  - side channel attacks have been done , it is determinstic however
+
+ #### Efficient Implementation the RSA Cryptosystem
+
+ - *Primality Testing* : testing if an integer is prime
+ - Computing GCD 
+ - Computing modular inverse 
+
+### The Elgamal Crypotosystem 
+
+> uses randomization, independent encryption of same plaintext are likely to produce different ciphertexts
+
+- viewing input blocks as numbers and applying arithmetic operations on these numbers to perform encryption & decryption
+- $\mathbb{Z}_p$, a number g in this is said to be a generator of primitive root modulo p, if for each postivie interger i in $\mathbb{Z}_p$, there is an integer k such that $i = g^k \mod p$
+- the discrete logarithm problem $x=g^k \mod p $, known to be computaionally hard to solve
+
+Bob chooses a random large prime p and finds a generator g. He picks a random number x between 1 and p-2 and $y=g^x \mod p$. The number x is Bob's secret key, public key is (p,g,y)
+
+Alice encrypts a message M, for Bob, by getting his public key. Generates a random number k, between 1 and p-2, uses modular multiplication and exponentation to compute numbers 
+- $a= g^k \mod p$
+- $b = My^k \mod p$
+
+#### Decryption and Security Properties 
+
+> dependent on the choice of random number k, each time Alice does this, she needs to use a different random number
+> cipher text for Bob, he can decrypt by computing $a^x \mod p$, computing the inverse moduluo p and timesing by b modulo p $M=b(a^x)^{-1} \mod p$
+
+### Key Exchange 
+
+> Symmetric Cryptosystem requires that Alice and Bob agree on a secret key before they can send encrypted message
+> A *key exchange protocol*, which is also called *key agreement protocol*, cryptographic approach to establish a shared secret key.
+
+- Diffie-Hellman key exchange protocol (DH protocol) based on modular exponentiation, assumes two public parameters have been established.
+    - prime number p 
+    - generator g for $\mathbb{Z}_p$
+- Alice picks a random positive number $x$ in $\mathbb{Z}_p$ and uses it to compute $X=g^x \mod p$.She sends X to Bob.
+- Bob picks a random postitve number y in $Z_p$ and uses it to compute $Y=g^y \mod p$. He sends Y to Alice
+-  Alices computes the scret key as $K_1 = Y^x \mod p$
+-  Bob computes the secret key as $K_2 = X^y \mod p$
+
+Both have computed the secret key $K=g^{xy} \mod p=K_1=K_2$
+SEcurity based on assumption that it is difficult for attacker to determine the key K from the public parameters.
+No methods are known for effciently computing $K=g^{xy} \mod p from p$, $X=g^x \mod p$, $Y=g^y \mod p$ called the Diffie-Hellman Problem
+
+Attack
+- attacker picks numbers s and t in $Z_p$
+- When Alice sends the value $X = g^x \mod p$ to Bob, the attacker reads it and replaces it with $T = g^t \mod p$.
+- When Bob sends the value $Y = g^y mod p$ to Alice, the attacker reads it and replaces it with $S = g^s mod p$.
+- Alice and the attacker compute key $K_1 = g^{xs} \mod p$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
