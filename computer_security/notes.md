@@ -1130,13 +1130,157 @@ allow administrators to apply more restrictive rules to network traffic and crea
 
 n- age traffic based on the actual contents of packets entering and exiting a network rather than merely considering the origin and destination. This is possible through the use of application-layer firewalls
 
-##
+## Chapter 6.4 Intrusion Detection
 
+>  intrusion detection system (IDS) is a software or hardware system that is used to detect signs of malicious activity on a network or individual computer
+> IDS sensors which collect real-time data about the functioning of network components and computers, and an IDS manager, which receives reports from sensors.
 
+IDS Manager complies data from sesnors to determine if an intrusion has occured. Based on site policies.
 
+#### Intrustions 
+___
 
+*masquerader*
+> n attacker who is falsely using the identity and/or credentials of a legitimate user to gain access to a computer system or network
+___
+*Misfeasor*
+>  a legitimate user who performs actions he is not autho- rized to do
+___
+*Clandestine user*
+>  a user who tries to block or cover up his actions by deleting audit files and/or system logs
+___
+*port scans*
+>information gathering intended to determine which ports on a host are open for TCP connections
+___
+*Denial-of-service attacks*
+> network attacks meant to overwhelm a host and shut out legitimate accesses
+___
+*Malware attacks*
+> eplicating malicious software attacks, such as Trojan horses, computer worms, viruses, etc.
+___
+*ARP spoofing*
+> an attempt to redirect IP traffic in a local-area network
+___
+*DNS cache poisoning*
+>a pharming attack directed at changing a host’s DNS cache to create a falsified domain-name/IP-address association
+___
 
+#### Intrusion Detection Techniques 
 
+> NIDS sits at perimeter of a network and detects malicious behaviour based on traffic patterns and content 
+>PIDS tailored towards detecting malicious behaviours in a specific protcol, deployed on a particular network host
+> HIDS resides on a single system and moniters activity on that machine, including system calls, interprocess communication and patterns in resource usage
+
+Network IDs usually workby performing deep packet inspection on incoming and outgoing traffic & applying a set of attack signatures or heuristics to determine whether traffic patterns indicate malicious behavior.
+
+ Host IDs Monitoring auit files and system logs to detect masquerding and misfeasant users who attempt unauthorized actions and clandestine users who try to deleye modify system monitoring,
+
+ use heuristic rules or statistical analysis to detect when a user is deviating from “normal” behavior, which could indicate that this user is a masquerading user. Misfeasant users can be detected by a system that has rules defining authorized and unauthorized actions for each user. Finally, clandestine users can be detected by monitoring and logging how changes are made to audit files and system logs themselves.
+
+ Passive IDs log potenitally malicious events and alert network administrator so action can be taken. Don't take any preemptive actions on their own. more sophisticated reactive systems, known as intrusion prevention systems (IPS) work in conjunction with firewalls and other network devices to mitigate the malicious activity.
+
+ #### An IDS Attack
+
+ > attempt to launch a denial of service attack on the IDS itself, triggering a high number of intrusion alerts, attacker may overwhlem an IDS to point that it cannot log every event, make it difficult to identify which logged event represents an actual attack & which were used as a diversion. Advanced techniques to evade detecction force IDS developers to employ sophisticated heuristics and signature scheems based on stare of art machine ....
+
+ ### Intursion Detection Events 
+
+ - *False positive* : when an alarm is sounded on benign activity, which is not an intrusion
+ - *False negative* : when an alarm is not sounded on a malicious event, which is an intrusion
+ - *True positive:* : when an alarm is sounded on a malicious event, which is an intrusion
+ - *True negative:* : when an alarm is not sounded on benign activity, which is not an intrusion
+
+#### The Base Rate Fallacy
+
+> effectivness of some IDSs can be misinterpreted due to statistcal error known as base rate fallacy, type of error occurs when probability of some coniditonal event is assessed without considering base rate of event 
+
+#### IDS Data Collection and Audit Records
+
+> Inout is a stream of records that identifies elementary actions for a network or host
+
+Event records include:
+• Subject: the initiator of an action on the target
+• Object: the resource being targeted, such as a file, command, device,
+or network protocol
+• Action: the operation being performed by the subject towards the object
+• Exception-condition: any error message or exception condition that was raised by this action
+• Resource-usage: quantitative items that were expended by the system performing or responding to this action
+• Time-stamp: a unique identifier for the moment in time when this action was initiated
+
+### Rule-Based Intrusion Detection
+
+> identify events that should trigger alarms is to use rules
+
+- rules identify types of actions which match such attacks, rule would encode a signature for such an attack
+- potential for annoying false-positive alarms is low, because the policy makers themselves have determined the list of rules
+- signature- based schemes are fundamentally limited in that they require the IDS to have a signature for each type of attack
+
+### Statistical Intrusion Detection
+
+• Count: the number of occurrences of a certain type of action in the given time range
+• Average:theaveragenumberofoccurrencesofacertaintypeofaction in a given of time ranges
+• Percentage: the percent of a resource that a certain type of action takes over a given time range
+• Metering: aggregates or average-of-averages accumulated over a rel- atively long period of time
+• Time-interval length: the amount of time that passes between in- stances of an action of a certain type
+
+- works out typical profile for each user or host 
+- Once a user profile is in place, the IDS manager can determine thresholds for anomalous behaviors and then sound an alarm any time a user or host deviates significantly from the stored profile for that person or machine
+- tatistical IDSs rely on analyzing patterns in network traffic, it would be difficult for an attacker to hide his behavior from an IDS manager using such techniques
+
+- nonmaliciuos behaviour could generate a significant anomaly.
+- sensitivity to normal changes in system or user behavior therefore leads to false positives
+-  stealthy attacker may not generate a lot of traffic and thereby might go unnoticed by a statistical network IDS, leading to false negatives
+
+### Port Scanning 
+
+> which traffic is permitted through a firewall and which ports on a target machine are running remote services is a crucial step in an- alyzing a network for security weaknesses
+
+Ports can be :
+- open
+- closed
+- blocker
+  
+#### TCP Scans 
+
+> perform scan attempts to initate TCP connection on each of ports on a target machine, 
+
+#### SYN Scans 
+
+> performing scan issues a low level TCP packet market with SYN flag for each port on target machine
+> port open, service listening on port will return a packet marked with SYN-ACK flag
+
+#### Idle Scanning 
+
+> relies on finding third party machine known as "zombie" has predicable TCP sequence numbers, attacker uses zombie’s weak TCP imple- mentation as a tool to perform a port scan on a separate target 
+
+- attacker sends a SYN-ACK TCP packet, to zombie, packet was unpromted by the zombie, 
+- reply to attacker with RST packet containing a sequence number, attacker sends a SYN packet to target he wishes to scan, spoofs src IP address 
+- scanned port is open, target will reply to zombie with "SYN-ACK packet"
+- replies to target with a RST packet and icrements sequence num again,
+- If it has been incremented, then the chosen port on the target is open, and if not, the port is either closed or blocked
+
+#### UDP Scans 
+
+> connectionless protcol, fewer cues from which to gather infomation, Most UDP port scans simply send a UDP packet to the specified port. If the port is closed, the target will usually send an ICMP “destination unreachable” packet
+
+- scan is not very reliable, however, because open ports and ports blocked by a firewall will both result in no response
+- improve the reliability of the response, many port scanners choose to query UDP ports using UDP packets containing the payloads for appropriate applications
+
+#### Port Scan Security Concerns 
+
+- type and version of each remote service and the operating system version may be valuable in planning an attack
+- port scanners may exploit the fact that each operating system has slight differences in its TCP/IP stack implementation and, as such, might respond differently to various requests or probes
+- versions of remote services may have subtle differences in the way they respond to certain requests, and knowledge of these differences may allow port scanners to determine the specific service running
+- known as *fingerprinting*
+  
+### Honey Pots
+
+> placed on networks in a way that makes it attractive such as having it configured with software with known vulnerabilities and having its hard drive full of documents that appear to contain company secrets or other apparently valuable information
+
+• Intrusion detection. Since attempts to connect to a honeypot would not come from legitimate users, any connections to a honeypot can be safely identified as intrusions. Based on the way in which such con- nections are initiated, an intrusion detection system can be updated
+with the latest attack signatures.
+• Evidence. Appealing documents on a honeypot computer encourage an intruder to linger and leave evidence that can possibly lead to the identification of the intruder and/or his location.
+• Diversion. A honeypot also may appear to be more attractive to potential intruders than legitimate machines, distracting intruders from sensitive information and services.
 
 
 
