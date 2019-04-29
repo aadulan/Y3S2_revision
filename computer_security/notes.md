@@ -1398,6 +1398,276 @@ LImitations:
 - TOR does not provide protection against end-to-end timing attacks
 - If the attacker can see both ends of the communication channel, he can correlate volume and timing information on the two sides
 
+## Chapter 3.1 Operating Systems Concepts 
+
+> provides interface between users of a computer and computer hardware
+> manages ways applications access resources in a computer including disk drives, CPU, main memory, input devices, output devices and network interfaces 
+
+___
+*multitasking*
+multiple application programs to run at the same time
+___
+
+### The kernel and Input/Output 
+
+> Kernel hadnles managment of low-level hardware resources, including memory, processors, input,output.
+
+User Applications <-> Operating System( OS Kernel and Non - im os applications) <-> CPU, Memory, Input and Output(Hardware)
+
+#### Input/ Output Devices 
+
+- device is using device driver, encapsulates the details of how interaction with that device should be done
+- application programmer interface (API) device drivers present to applications, allow programs to interact with devices 
+
+#### System Calls 
+> syscall - allow user applications to delegate tasks to kernel to perform tasks 
+> called software interrupts : requests by application for processor to stop current flow of execution and switch to handler for interrupt
+
+- trap switching mode to kernel
+
+### Processes
+
+> instance of program that is currently executing 
+
+-  actual contents of programs are in Persistent storage such as a harddrive , to be executed program should be loaded in RAM
+-  kernel manages all running processes giving each a fair share of CPU
+-  *Time slicing* -> os gives each running process a tiny bit of time to do something and moves on to the next process
+
+#### Users and Process Tree
+
+- user creates a new process, kernel see this as an existing process asking to create a new process, which is called *forking*
+- *parent process* one is being forked is the *child process*
+- most process new child process inherits permissions of its parents unless parent decideds to lower it on purporse
+- processes are in a tree, root in linux known as init 
+
+#### Process IDs
+
+> process running on a given computer is identified by a unique non- negative integer, called the process ID (PID), root in linux has 0
+
+#### Process Privileges 
+
+operating system associates info about user on whose behalf the process is being executed with each process, Unix-based systems have an ID system where each process has a user ID (uid), which identifies the user associated with this process, as well as a group ID (gid), which identifies a group of users for this process
+
+#### Inter-Process Communication 
+
+- communicate is to pass messages by reading and writing files
+- allows for processes to communicate with each other is to have them share the same region of physical memory. 
+- *pipes and sockets* act as tunnels from one process to another
+
+#### Signals 
+
+> processes can send direct messages to each other asynchronously
+
+- process receives a signal, os interrupts current flow of execution of that process and checks whether that process has an apporopriate signal handler, signal handler exists, routine is executed, process does not handle this particular signal, then it takes a default action, Terminating a nonresponsive process on a Unix system is typically performed via sig- nals.
+
+#### Remote Procedure Calls 
+
+> allows a process to call a subroutine from another process program
+
+#### Daemons and Services
+
+> process which runs without any user intervention
+
+- started by init process and have different permissions, Common examples of daemons are processes that control web servers, remote logins, and print servers.
+
+### The Filesystem 
+
+> external, nonvolatile memory of the computer is organized
+
+#### File Access Control 
+
+>  how to delineate which users can access which resources, that is, who can read files, write data, and execute programs, file permissions 
+
+#### File permissions 
+
+- checked by the operating system to determine if a file is readable, writable, or executable by a user or group of users
+- stored in metadata
+- process attempts to access file, os checks identity of process and determines wheather good or not.
+
+- file permission matrix: who is allowed to do what with the file.
+- owner class : which determines permissions for the creator of the file
+- group class : which determines permissions for users in the same group as the file
+- other :  class determines permissions for users who are neither the owner of the file nor in the same group as the file.
+
+- read bit 
+- write bit 
+- execute bit
+
+#### Unix File Permissions 
+
+- binary , different weights 
+  - read bit 4
+  - write bit  2
+  - execute bit 1
+- change using chmod
+- Unix-based systems employ a path-based approach for file access control. The operating system keeps track of the user’s current working directory. Access to a file or directory is requested by providing a path to it, which starts either at the root directory
+
+### Memory Management 
+
+> organization and allocation of the memory in a computer.
+
+- process executes, it is allocated a region of memory known as its address space, stores program code, data and storage that process needs during its execution, address space is organised:
+1. Text. This segment contains the actual machine code of the program, which was compiled from source code prior to execution.
+2. Data. This segment contains static program variables that have been initialized in the source code, prior to execution.
+3. BSS. This segment, which is named for an antiquated acronym for block started by symbol, contains static variables that are uninitial- ized (or initialized to zero)
+4. Heap. This segment, which is also known as the dynamic segment, stores data generated during the execution of a process, such as objects created dynamically in an object-oriented program written in Java or C++.
+5. Stack. This segment houses a stack data structure that grows down- wards and is used for keeping track of the call structure of subroutines (e.g., methods in Java and functions in C) and their arguments.
+
+#### Memory Access Permissions 
+
+- processes are not allowed to access the address space of other processes, unless they have explicitly requested to share some of that address space with each other
+- Unix memory model, operating systems divide the address space into two broad regions: user space, where all user-level applications run, and kernel space, which is a special area reserved for core operating system functionality.
+
+#### Contigunous Address Spaces 
+
+- Arrays are indexed as contiguous memory blocks
+
+#### Virtual Memory 
+
+computer architectures incorporate a system of virtual memory, where each process receives a virtual address space, and each virtual address is mapped to an address in real memory by the virtual memory system
+
+a virtual address is accessed, a hardware component known as the memory management unit looks up the real address that it is mapped to and facilitates acces
+
+that they allow for the total size of the address spaces of executing processes to be larger than the actual main memory of the computer
+
+#### Page Faults 
+
+>  slight time trade-off for benefit we get from virtual memory, however, since accessing the hard drive is much slower than RAM
+
+- block of the address space is not accessed for an extended period of time, may be paged out 
+- process attempts to access a virtual address that resides in a paged out block, it triggers a page fault
+-  a page fault occurs, another portion of the virtual memory system known as the paging supervisor finds the desired memory block on the hard drive, reads it back into RAM, updates the mapping between the physical and virtual addresses, and possibly pages out a different unused memory block
+
+### Virtual Machines 
+ 
+ - software that creates a simulated environment the operating system can interact with
+ - software layer that provides this environment is known as a hypervisor or virtual machine monitor (VMM)
+ - system running inside the VM is known as a guest, and the native operating system is known as the host
+  
+#### Implementing Virtual Machines 
+
+- Emulation 
+
+where the host operating system simulates virtual interfaces that the guest oper- ating system interacts with. Communications through these interfaces are translated on the host system and eventually passed to the hardware. The benefit of emulation is that it allows more hardware flexibility. ownside of emulation is that it typically has decreased performance due to the conversion process associated with the communication between the virtual and real hardware
+
+- Virtualization
+
+removes above conversion, the virtual interfaces within the VM must be matched with the actual hardware on the host machine, so communications are passed from one to the other seamlessly. This reduces the possibilities for running exotic guest operating systems, but results in a significant performance boost.
+
+Advans:
+- *Hardware Efficiency* : system admibs to host multi os on same machine ensuring efficient allocation of hardware resources
+-  *Portability* : to run a program on multiple different machines
+-  *Security*: maximizing available resources and provid- ing portable computing solutions, virtual machines provide several benefits from a security standpoint.
+-  *Management Convenience* : ability to take snapshots of the entire virtual machine state can prove very convenient
+
+## Chapter 3.4 Application Program Security 
+
+### Compiling and Linking 
+
+>  machine code instructions that a processor can execute is known as compiling
+
+### Simple Buffer Overflow Attacks 
+
+> allocates a fixed-size buffer in memory in which to store information, care must be taken to ensure that copying user-supplied data to this buffer is done securely and with boundary checks
+
+#### Arithmetic Overflow 
+
+-  if a program continually adds very large numbers and eventually exceeds the maximum value for a signed integer, 0x7fffffff, the representation of the sum overflows and becomes negative rather than positive
+-   if a program adds many negative numbers, eventually the sum will underflow and become positive
+-   the highest number is reached, the next sequential integer wraps around to zero.
+
+### Stack-Based Buffer Overflow 
+
+> exploits the special structure of the memory stack
+
+- n attacker provides input that the program blindly copies to a buffer that is smaller than the input.
+-   an attacker could overwrite local vari- ables adjacent in memory to the buffer, which could result in unexpected behavior.
+- a stack smashing attack, the attacker exploits a stack buffer vulnerability to inject malicious code into the stack and overwrite the return address of the current routine so that when it terminates, execution is passed to the attacker’s malicious code instead of the calling routine.
+
+#### Seizing Control of Execution 
+
+> or the attacker is to guess the location of the return address with respect to the buffer and to determine what address to use for overwriting the return address so that execution is passed to the attacker’s code.
+
+- processes cannot access the address spaces of other processes, so the malicious code must reside within the address space of the exploited process, 
+- the address space of a given process is unpredictable and may change when a program is run on different machines
+
+#### NOP Sledding 
+
+> CPU instruction that does not actually do anything except tell the processor to proceed to the next instruction
+
+Before copying :
+Buffer -> other program data -> Return address
+
+After Copying:
+JUnk Padding -> Guessed Address of Shellcode -> NOPs -> Shellcode 
+
+#### Trampolining 
+
+> jump-to- register or trampolining, is considered more precise
+
+#### The return to libc attack 
+
+> e attacker can determine the address of a C library function within a vulnerable process’s address space, such as system() or execv, this information can be used to force the program to call this function.
+
+#### Shellcode 
+
+> the ability to execute arbitrary code on the machine
+> malicious code included in an exploit is often known as shellcode, written in assembly language 
+
+
+#### Preventing Stack-Based BUffer Overflow Attacks 
+
+- check that you are not overwriting address 
+- Canary : a value that is placed between a buffer and control data (which plays a similar role to a canary in a coal mine). The system regularly checks the integrity of this canary value, and if it has been changed, it knows that the buffer has been overflowed
+- address space layout randomization (ASLR) , rearranges the data of a process’s address space at random, making it extremely difficult to predict where to jump in order to execute code.
+
+### Heap-Based Buffer Overflow Attacks 
+
+> power to allocate memory dynamically and have it persist across multiple function calls. This memory is allocated in a large portion of unused memory known as the heap.
+
+- if don't deallocate, can cause a memory leak
+- caused overflows 
+
+- can overwrite portions of the next block 
+
+#### Preventing Heap-Based Buffer Overflow Attacks 
+
+- ns. Address space randomization prevents the attacker from reliably guessing memory locations, making the attack more difficult.
+- some portions not executable 
+- store heap metadata in seperate location
+
+### Format String attacks 
+
+> allow an attacker to seize control and execute arbitrary code in the context of the program by overwriting a return address, function pointer, etc
+
+### Race Conditions
+
+>  any situation where the behavior of the program is unintentionally dependent on the timing of certain events.
+
+#### The Time of Check/Time of Use Problem
+
+> attacker could exploit this small delay by changing the file in question between the two calls
+> two operations are performed atomically, that is, they should be performed as a single uninterruptible operation
+
+## Chapter 3.3.2 Password-Based Authentication
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
 
 
 
