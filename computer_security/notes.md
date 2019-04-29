@@ -1651,6 +1651,411 @@ JUnk Padding -> Guessed Address of Shellcode -> NOPs -> Shellcode
 
 ## Chapter 3.3.2 Password-Based Authentication
 
+> authentication username and passsword 
+
+- typi- cally keep cryptographic one-way hashes of the passwords in a password file or database instead
+- guessing passwords from the password file is to conduct a dictionary attack,
+
+### Password Salt 
+
+> salt would be introduced by associating a random number with each userid
+
+### How Salt Increases Search Space Size 
+
+> password salt significantly increases the search space needed for a dictionary attack
+> Search space is $2^B \times D$ where B is bits of salts,D size of list of words
+
+### Password Authentication in Windows and Unix-based Systems
+
+Windows systems, password hashes are stored in a file called the Security Accounts Manager (SAM) file, which is not accessible to regular users while the operating system is running
+
+# Chapter 7 Web Security 
+
+## The World Wide Web 
+
+### HTTP And HTML
+
+- process begins with the browser determining the IP address of the web server that is hosting the web site of interest.
+
+#### Uniform Resource Locators (URLs)
+
+> in HTML 
+
+#### Connecting to a Web Server
+
+> http used for retreiving requested web page 
+> browser checks local DNS cache, if not there queries a server to resolve IP address, makes a TCP connection 
+port 
+ - 21 : FTP
+ - 80 : HTTP
+ - 443 : HTTPS 
+
+ #### HTTP Request 
+
+ - establish tcp , broswer sends http requests in a data portion of tcp packet, request line( GET or POST),Headers section, identifies additonal info
+
+ #### HTML Forms 
+
+ > provide input to a website in form of variables,
+
+ - users submit a form using GET variables, the name-value pairs for the variables are encoded directly into the URL, separated by &
+
+#### Lack of Confidentiality in HTTP 
+
+- does not encrypt data, attacker could intercept the packets being sent between a web site
+- could get a man in the middle attack 
+  
+### HTTPS
+
+*HTTPS (hypertext transfer protocol over secure socket layer)*
+
+- identical to HTTP but either has SSL ( Secure Socket Layer), TLS(transport layer security)
+- reley on certicate to verify identity of server , browser sends a list of cryptographic ciphers and hash functions supported by both, picks one, sends back certificate which contains public key of server. Broswer verifies authenticity of certifcation, geenrate secret keys 
+
+#### Web server Certificates 
+
+> verifying the identity of the requester and ownership of the domain name for the website, the CA signs and issues the certificate, which the web server then sends to browsers to provide proof of its identity
+>  SSL server certificate,
+
+• Name of the CA that issued the certificate
+• Serial number, unique among all certificates issued by the CA
+• Expiration date of the certificate
+• Domain name of the web site
+• Organization operating the web site and its location
+• Identifierofthepublic-keycryptosystemusedbythewebserver(e.g., 1,024-bit RSA)
+• Public key used by the web server in the HTTPS protocol
+• Identifier of the cryptographic hash function and public-key cryp- tosystem used by the CA to sign the certificate (e.g., SHA-256 and 2,048-bit RSA)
+• Digital signature over all the other fields of the certificate
+
+#### Extended Validation Certifcates 
+
+> confirmation that the domain on the certificate being signed is in fact owned by the certificate requester
+>  new class of certificates can only be issued by CAs who pass an audit demonstrating that they adhere to strict criteria for how they confirm the subject’s identity
+
+#### Certificate Hierarchy 
+
+> top-level certificate is known as the root certificate
+> root certificate is known as a self- signed certificate, where the issuer is the same as the subject
+> the highest authority within an organization, are referred to as anchor points in the chain of trust used to verify a certificate
+
+#### Trustworthiness and Usability Issues for CErtificates 
+
+- certificate revocation list
+  - private key compromise or change of organization operating the web site
+
+### Dynamic Content 
+ > pages featuring dynamic content can change in response to user interaction or other conditions, such as the passage of time.
+
+#### Document Object Model (DOM)
+
+> representing the content of a web page in an organized way
+
+- makes a truee 
+
+#### Javascript
+
+>  handles events
+
+### Sessions and Cookies 
+
+> encapsulates information about a visitor that persists beyond the loading of a single page
+
+- passing session information via GET or POST variables using cookies 
+
+concept of a session is a class of attacks known as *session hijacking*
+
+#### SEssions using GET or POST
+
+- user’s session information and inserts it into the page being delivered to the client using the mechanism of hidden fields
+- Each time the user navigates to a new page, this code passes the user’s session information to the server allowing it to “remember” the user’s state.
+- method is particularly susceptible to man-in- the-middle attacks
+
+#### Cookies 
+
+> sent to the client by the web server and stored on the client’s machine, the user revisits the web site, these cookies are returned, unchanged, to the server, which can then “remember” that user and access their session information
+
+#### Cookie Properties and Components 
+
+> cookie defaults to being deleted when the user exits the browser.
+
+- Only hosts within a domain can set a cookie for that domain. A subdomain can set a cookie for a higher-level domain, but not vice versa
+- the cookie can only be accessed within a specific subdirectory of the web site, and defaults to the root directory of a given domain.
+- cookies are transmitted unencrypted using HTTP, and as such are subject to the same man-in-the-middle attacks
+- Cookies can set an HTTP-Only flag, scripting language, 
+Finally, cookies can set an HTTP-Only flag. If enabled, scripting lan- guages are prevented from accessing or manipulating cookies stored on the client’s machine
+- preventing scripting languages from accessing cookies signif- icantly mitigates the risk of cross-site scripting (XSS) attacks
+
+#### How Cookies Support Sessions 
+
+- client automatically includes any cookies set for a particular domain and path in the Cookie field of any HTTP request header being sent to that server.
+
+#### Security Concerns for Cookies 
+
+- dangerous to store any sensitive information unencrypted in the body of a cookie, since cookies can typically be accessed by users of the system on which they are stored
+
+#### Server-side sessions 
+
+- servers typically use a session ID or session token
+-  server then employs one of the two previous methods, o store this token on the client side
+-  session ID should be hard to guess by an attacker.
+
+## Attacks on Clients 
+
+### Session Hijacking 
+
+> attacker can take over a TCP session in an attack called session hijacking
+
+attacker intercept communication between a web client and web server, but also requires that the attacker impersonate whatever measures are being used to maintain that HTTP session
+
+#### Defenses Against HTTP Session Hijacking 
+
+- protect against packet sniffers and TCP session hijacking.
+- to encrypt such session tokens
+- server-side session IDs should be created in ways that are difficult to predict, for instance, by using pseudo-random numbers.
+- replay attacks, which are attacks based on reusing old credentials to per- form false authentications or authorizations.
+- erver can protect against such attacks by incorporating random numbers into client-side tokens, as well as server-side tokens, and also by changing session tokens frequently
+- a session token with the IP addresses of the client so that a session token is considered valid only when connecting from the same IP addres
+
+#### Trade Offs
+
+- little long term risk on client end 
+- server-side sessions are terminated when the client closes the browser.
+- server- side session techniques that use random session tokens that are frequently changed can result in a reduced risk for HTTP session hijacking on the user’s end
+
+### Phishing 
+
+>  attacker creates a dummy web site that appears to be identical to a legitimate web site in order to trick users into divulging private information.
+
+#### URL OBfuscation
+
+> disguise the URL of the fake site
+
+- own as the Unicode attack, more formally known as a homeograph attack. Unicode characters from international alphabets may be used in URLs in order to support sites with domain names in multiple languages, so it is possible for phishers to register domain names that are very similar to existing legitimate sites by using these international characters.
+
+### Click Jacking 
+
+> click-jacking is a form of web site exploitation where a user’s mouse click on a page is used in a way that was not intended by the user.
+
+#### Other Actions that can be Click Jacked 
+
+- click-jacking might be used is ad- vertisement fraud.
+- Click- jacking can be used to force users to unwillingly click on advertisements, raising the fraudulent site’s revenue, which is an attack known as click fraud.
+
+### Vulnerabilities in Media Content 
+
+#### The Sandbox 
+
+> refers to the restricted privi- leges of an application or script that is running inside another application.
+> Different scripting languages and media applications are granted vary- ing access to different components inside most web browsers.
+
+#### Media Content and Adobe Flash 
+
+- embedded media player used by a web browser to play this content has application-level flaws, malicious media files may be created to escape the sandbox of the victim’s browser and execute code on the victim’s machine.
+
+#### Java Applets 
+
+- sandbox restrictions significantly mitigate the risk of dangerous behavior by Java applets
+- developer of Java applets can obtain a code signing certificate from a CA and create signed applets with the corresponding private key
+- signed applet requests to operate outside of the sandbox, it presents the certificate to the user, who, after verifying the validity of the certificate and the integrity of the applet code
+
+#### ActiveX Controls
+
+- ActiveX controls are granted access to all system resources outside of the browser.
+- ActiveX controls can effectively be used as a vector for malware
+- a digital signature scheme is used to certify the author of ActiveX controls
+
+### Privacy Attacks 
+
+#### Third Party and Tracking Cookies
+
+- cookies are used by advertisers to track users across multiple web sites and gather usage statistics
+  
+#### Protecting Privacy 
+
+- specify policies regulating how long cookies are stored and whether or not third-party cookies are allowed
+- to protect a user’s anonymity on the Web, proxy servers can be used.
+- web browsers have a “private browsing” mode, which can be entered using a single command, preventing the storage of any cookies and the recording of any browsing history while in this mode
+
+### Cross- Site Scripting(XSS)
+
+> improper input val- idation on a web site allows malicious users to inject code into the web site, which later is executed in a visitor’s browser
+
+#### Persistent XSS
+
+> code that the attacker injects into the web site remains on the site for a period of time and is visible to other users
+
+- Javascript has the ability to redirect visitors to arbitrary pages, so this is one possible avenue for attack. Malicious users could simply inject a short script that redirects all viewers to a new page that attempts to download viruses or other malware to their systems
+  
+#### Nonpersistent XSS
+
+> most real-life examples of cross-site scripting do not allow the injected code to persist past the attacker’s session
+
+#### Defenses againsnt XSS 
+
+- users to set restrictive policies on when scripts may be executed
+- users choose to eliminate all scripts except for specific sites on a white list. Others allow scripts on all sites except for those listed on a public blacklist.
+- XSS scanner might prevent execution of any script lines that attempt to append a cookie directly to the end of a URL, because this code might indicate an XSS attack
+  
+#### Other XSS Attacks 
+
+- plagued by these worms, since the ability to communicate with other users is built into the function- ality of the site, and is therefore accessible by Javascript
+- social networking site would execute some payload, and then automatically send itself to friends of the victim, at which point it would repeat the process and continue to propagate.
+
+### Cross Site request Forgery 
+
+>  opposite of cross-site scripting
+
+- While XSS exploits a user’s trust of a specific web site, CSRF exploits a web site’s trust of a specific user. In a CSRF attack, a malicious web site causes a user to unknowingly execute commands on a third-party site that trusts that user
+
+Login attack :
+a malicious web site issues cross- site requests on behalf of the user, but instead of authenticating to the victim site as the user, the requests authenticate the user as the attacker
+
+### Defenses Against Client-Side Attacks
+
+Mitigation of these attacks by the user can be facilitated with two primary methods:
+• Safe-browsing practices
+• Built-in browser security measures
+
+#### Safe Browsing Practices 
+
+- https
+- the legitimacy of the site should be confirmed by examining the URL and ensuring that there are no certificate errors
+  
+#### Bulit in Browser Security Measures 
+
+web sites are placed in the Internet Zone. Users can then delegate sites to Trusted and Restricted zones, Each zone has its own set of security policies, allowing the user to have fine-grained control depending on whether or not they trust a particular web site
+
+## Attacks on SErvers
+
+### Server side scripting 
+
+useful to utilize code on the server side that is executed before HTML is delivered to the user
+
+allow servers to perform actions such as accessing databases and modifying the content of a site based on user input or personal browser settings
+
+executed on the server, and because of this only the result of this code’s execution, not the source, is visible to the client
+
+#### PHP 
+
+> PHP is a hypertext pre- processing language that allows web servers to use scripts to dynamically create HTML files on-the-fly for users, based on any number of factors, such as time of day, user-provided inputs, or database queries
+
+### Server-Side Script Inclusion Vulnerabilities
+
+> web security vulnerability at a web server is exploited to allow an attacker to inject arbitrary scripting code into the server, which then executes this code to perform an action desired by the attacker.
+
+#### Remote- File Inclusion
+
+desirable for server-side code to execute code contained in files other than the one that is currently being run
+
+n attack is known as a remote-file inclusion (RFI) attack. code an attacker might execute in such an attack is a web shell, which is a remote command station that allows an attacker to navigate to the web server and possibly view, edit, upload, or delete files on web sites that this web server is hosting.
+
+#### Local-File Inclusion (LFI)
+
+> ocal-file inclusion (LFI) attack causes a server to execute injected code it would not have otherwise performed (usually for a malicious purpose). The difference in an LFI attack, however, is that the executed code is not contained on a remote server, but on the victim server itself. 
+> locality may allow an attacker access to private information by means of bypassing authentication mechanisms
+> FI attacks can allow an attacker to access files on the web server’s system, outside of the root web directory.
+
+### Databases and SQL Injection Attacks 
+
+> database is a system that stores information in an organized way and produces reports about that information based on queries presented by users.
+
+#### SQL Structured Query Language
+
+• SELECT: to express queries
+• INSERT: to create new records
+• UPDATE: to alter existing data
+• DELETE: to delete existing records
+• Conditional statements using WHERE, and basic boolean operations such as AND and OR: to identify records based on certain conditions
+• UNION: to combine the results of multiple queries into a single result
+
+queries to query database
+
+#### SQL Injection Attack
+
+> SQL injection allows an attacker to access, or even modify, arbitrary information from a database by inserting his own SQL commands in a data stream that is passed to the database by a web server. The vulnerability is typically due to a lack of input validation on the server’s part.
+
+#### Unintended Information Disclosure
+
+constructing the query to the database, the server-side code does not check to see whether the GET variable, id, is a valid input, that is, that it is in proper format and is referring to an id value that actually exists.
+
+#### BYpassing Aunthentication 
+
+he server creates an SQL query using the POST variables,umber of rows returned by this query is greater than zero (that is, there is an entry in the users table that matches the entered username and password, access is granted.
+
+#### Other SQL Injection Attacks
+
+> allow for inserting new records, modifying existing records, deleting records, or even deleting entire tables
+
+to access information from a database even when the results of a vulnerable database query are not printed to the screen., using mutliple injected queries, known as blind SQL Injection Attack
+
+sert malicious code into the database that could at some point be sent to users’ browsers and executed
+
+SQL injection worm. orms propagate automatically by using the resources of a compromised server to scan the Internet for other sites vulnerable to SQL Injection
+
+#### Preventing SQL Injection 
+
+- strip dangerous characters 
+
+### Denial of Service Attacks 
+
+> single point of failure : major web site uses a single web server to host the site
+
+over- load a web server with so many HTTP requests that the server is unable to answer legitimate requests
+
+multiple web servers for an important web site can also serve as protection
+
+### Web SErver Privileges 
+
+he general principle of least privilege, the web server application should be run under an account with the lowest privileges possible
+
+an attacker may first compromise the web server, and then exploit weaknesses in the operating system of the server or other programs on the machine to elevate his privileges to eventually attain root access
+
+### Defenses Against Server-Side Attacks
+
+#### Developers 
+- development practices is the principle of input validation
+
+#### Admin
+- least privilege 
+- web servers should be granted read privileges only to the directories in the web site’s root directory, write privileges only to files and directories that absolutely need to be written to
+- group policy, which is a set of rules that applies to groups of users
+- apply security updates and patches as soon as they are released
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
