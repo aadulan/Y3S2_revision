@@ -1,94 +1,43 @@
 # Computer Security
 
-## Chapter 1 Fundamental Concepts
-___
+## Network Security
 
-### 1.1 Confidentiality, Integrity, and Availability 
-
-**C.I.A**
- -  **Confidentiality**
-     - Avoidance of the unauthorised disclosure of information
-        - Protection of data
-        - Providing access for those who are allowed to see it
-      - *Encryption:*
-        - transformation of info using an encryption key, so the encrypted data can only be read using the decryption key.
-        - secure -> encryption key difficult so someone cannot read cipher text with decryption
-      - *Access control:*
-        - policies that limit access to confidential information to systems with a 'need to know'
-        - done by identity, name ,serial number, role of person
-      - *Authentication:*
-        - the determination of the identity or role that someone has
-        - by a key fob, smart card, password
-        - something you are, have or know
-      - *Authorization:*
-        - the determination if a person or system is allowed to access resources, based on access control policy
-      - *Physical Security:*
-        - physical barriers to limit access to protected computational resources
-        - locks on cabinets and doors
- -  **Integrity**
-    - Property that information has not be altered in an unauthorised way
-    - *Backups:*
-      - the periodic archiving of data
-      - data files can be restored if altered in an unintended way
-    - *Checksums:*
-      - computation of a function that maps the contents of a file to a numerical value
-      - depends on contents of file, a tiny change can result in a different value
-      - used to detect a breach of data integrity
-     - *Data correcting codes:*
-        - method for storing data in a way that small changes can be easily detected and automatically corrected.
-        - applied to small units of storage
-     - All tools use redundancy -> replication of some content or functions
-     - Need to protect metadata -> attributes of the file & info about access which aren't part of the content
-       - time stamps, groups accessed, users
- -  **Availability**
-    - Property that info is accessible and modifiable in a fashion by those authorised to do so
-    - *Physical Protections:*
-      - infrastructure meant to keep info available even in the event of physical challenge
-      - building housing, systems to withstand storms, earthquakes & bomb blasts
-    - *Computational redundancies:*
-      - computer and storage devices that serve as fallbacks in case of failures
-      - redundant arrays of inexpensive disks (RAID) use storage redundancies to keep data available to clients
-
-
-<h3>Chapter 5  Network Security</h3>
-<h4>1 Network Security Concepts</h4>
-<h5>1.1 Network Topology </h5>
- - data packet is a finite-length set of bits -> divided into a
-   - header: specifics where the packer is going and contains various overhead/bookkeeping details
+### Network Security Concepts
+#### Network Topology 
+ - data packet is a finite-length set of bits -> divided into 
+   - header: specifics where the packet is going & contains various overhead/bookkeeping details
    - payload: actual information that is being communicated
 - network connection structure  -> network topology
-- computers in a network are **host nodes** that can be sources and destinations of messages
+- computers in a network are **host nodes** that can be src and dest of messages
 - routers are communication nodes -> messages flow
-- physical connection between nodes define channels where messages travel so that packets move by being passed from one to another to get source -> destination
+- physical connection between nodes define channels where messages travel so that packets move by being passed from one to another to get source -> dest
 - private network of computers in close zone ->  *local area network (LAN)*
   - internet -> *wide area network (WAN)*
-    - Autonomous Systems(ASs) -> wide area networks on the internet -> clusters
+    - *Autonomous Systems* (ASs) -> wide area networks on the internet -> clusters
       - controlled by single organisation entity -> how packets are routed among nodes
       - using shortest paths so distance is minimised and routing cycles are avoided
       - between ASs -> by contractual agreements, avoid loops
 
-<h5>1.2 Internet Protocol Layers</h5>
+#### Internet Protocol Layers
 - ***Internet protocol Stack***
-    - layers provides a set of services & functionality guarantees for higher layers
+    - layers provides set of services & functionality guarantees for higher layers
     - interface each layer provides to higher levels -> provide essential info, lower level details are hidden
 - ***Physical Layer:***
     - move the actual bits between nodes of the network
-    - physical wires (abstraction it provides to the higher level is the ability)
 - ***Link layer:***
-    - transfer data between a pair of network nodes | between nodes in a local-area network and to detect errors that occur at the physical layer
+    - transfer data between a pair of network nodes | between nodes in a local-area network & detect errors that occur at physical layer
     - deals with logic in sending info & how to find good routing paths in a local-area network.
     - Protocols such as Ethernet -> route packets between computers sharing a common connection
-    - The link layer provides a grouping of bits into ordered records, called frames -> 48 bit address called *media access control addresses (MAC address)*
-- ***Network layer:***
-    - known as the internet layer
-    - provide for moving of packets between any two hosts(best effort basis)
-    - individually addressing each host using a *IP address*
+    - link layer provides a grouping of bits into ordered records, called frames -> 48 bit address called *media access control addresses (MAC address)*
+- ***Network layer (Internet Layer)***
+    - provide moving of packets between any two hosts(best effort basis)
+    - individually addressing each host with *IP address*
     - Main protocol is (IP) -> IPv4(32 bit IP addresses), IPv6(128 bit IP address)
     - *Best Effort Basis*  no guarantees that any packet will be delivered, if reliable delivery is needed -> upper layer requirement
 - ***Transport Layer:***
     - support communication and connections between applications based on IP address and ports(16 bit address) for application level protocols
     - *Transmission Control Protocol(TCP)*
-        - virtual connection between a client and a server and guarantees delivery of all packets in an ordered fashion
+        - virtual connection between a client & a server and guarantees delivery of all packets in an ordered fashion
     - *User Datagram Protocol(UDP)*
         - assumes no setup and delivers packets as quickly as possible but with no delivery guarantees
 - ***Application Layer:***
@@ -113,25 +62,29 @@ ___
 
 <h5>1.3 Network Security Issues</h5>
 - ***Confidentiality***
+    - Avoidance of unauthorised disclosure of info
     - encryption could be done at application layer (https protocols & IP sec specs)
 - ***Integrity***
+    - Property that info has not ben altered in an unauthorised way 
     - checksums to validate a small number of bits not encryption -> not cryptographically secure.
-    -  should be done at the application layers | alternative protocols at lower Layers
+    - should be done at the application layers | alternative protocols at lower Layers
 - ***Availability***
+    - Property that info is accesible & modifiable in a way that is authorised to
     - become unavailable -> lots of data requests,
     - need to scale with ↑ communications requests & block attacks from illegitimate request
--  ***Assurance***
+- ***Assurance***
     - by default, a packet is allowed to travel between any source and destination in a network, introduce permissions & policies that control data flow in a network, implemented as explicit additions, firewalls designed to blocked traffic in and out of a network domain, if that traffic violates policies set by the administrators
 - ***Authenticity***
     - headers & footers -> internet protocol don't have a place to put digital signatures, no notion of user identities, data exchanged between machines & allow for signatures, explicitly at the application layer & alternative protocol
 - ***Anonymity***
     - no default notion of identity of users of internet -> built-in anonymity -> good for human rights worker reporting on abuses & bad if thief steals credit card numbers identity
 
-<h4>The Link Layer</h4>
+### Link Layer
+
 - modern operating systems include TCP & IP implementation, allow programs to interact with IP stack
 - libraries support upper levels (including passing data to physical layer device drivers)-> starts with the link layer ↑ above the physical layer & concept of group sequences of bits into frames
 
-<h5>2.1 Ethernet</h4>
+#### Ethernet
 - Ethernet refers to physical medium (cable) as well as the link-layer protocol
 - frame transmitted on a cable -> impulse is sent through cable & received by other machines that connect to cable on same *local-area network (LAN)*
 - portion of local-area network -> same logical connection : *network segment*
@@ -144,51 +97,51 @@ ___
     - reduces possibilties collisions & increases speed of network, effective bandwidth
     - reduces risk of network eavsdropping as network frames forwarded by a switch are less likely to been seen by machines which are not destinations
 
-<h5>Media Access Control (MAC) Addresses </h4>
+#### Media Access Control (MAC) Addresses
 - network interfaces are typically identified by a hardware-specific identifier known as its media access control address (MAC address)
-- 48 bit identifier assigned to a network interface by its manufacturer
-- sequence of six pairs of hexadecimal digits 00:16:B7:29:E4:7D
-- used in the link layer to indentify devices in a network - intended to be unique
+- 48 bit(6 pairs of hexadecimal) identifier assigned to a network interface by its manufacturer
+- used in the link layer to identify devices in a network - intended to be unique
 - first 24 bits are a prefix identity the organisation
 - can be changed by software through driver of network
 - change -> the second-least-significant bit of the most significant byte is set to 1, while in a manufacturer-issued MAC, this bit is set to 0
 - faciliate routing of frames to correct destinations
-- what switches use
 - format of a ethernet frame:
     - preamble
     - delimiter
     - mac dest/src
     - ethertype length
     - payload
-    - CRc-32 checksum ->confirm data integegrity
+    - CRc-32 checksum -> confirm data integegrity
     - interframe gap
 
-<h5>ARP Spoofing</h4>
-- The Address Resolution Protocol (ARP) is a link-layer protocol that pro- vides services to the network layer. ARP is used to find a host’s hardware address given its network layer address.
-- Used to determine the mac adrress associated with a give IP -> valuable service (man in the middle attack agaisnt protocol)
+#### ARP Spoofing
+- Address Resolution Protocol (ARP) is a link-layer protocol that provides services to the network layer. ARP is used to find a host’s hardware address given its network layer address.
+- Used to determine the mac addrress associated with a give IP -> valuable service (man in the middle attack agaisnt protocol)
+
 
 <h6> How ARP works ? </h6>
-- let a machine want to send a packet to a dest machine on the same network.
+- machine want to send a packet to a dest machine on the same network.
 - at network layer - scr knows the dest ip address, sending the packet is job of the link layer, src needs to idenify the mac address of dest machine
-- in arp proctol, resoulution of ip address to mac is done by a broadcast message that queries all network interfaces on a local-are network so proper destination can respond.
-- the reply is transmitted in a frame addressed to the machine that made the  request.
-- stored the IP-MAC address pair in a table called arp cache so doesn't have to do it again, src can send to dest
-- lacks Authentication. Any computer on network could claim to request the ip address , any machine can recieve an arp reply even if it didn't make the request will automatically update the cache. Shortcoming, it is possible for malicious parties on a LAN to perform a arp spoofing attack,
-- The attacker sned a arp reply to a target, who associates the ip address of the lan gateway with the attackers mac address. the atttacker sends an arp reply to bob associating the target ip's address with the attacker's mac address.this is arp cache poisioning. Bob now things alice ip is connected with eve mac  and alice thinks bob ip is connected to eve mac. thus everything is routed through eve.
+- in arp proctol, resolution of ip address to mac is done by a broadcast message that queries all network interfaces on a local-are network so proper destination can respond.
+- reply is transmitted in a frame addressed to the machine that made the  request.
+- stored the IP-MAC address pair in a table called arp cache, src can send to dest
+- lacks Authentication. Any computer on network could claim to request the ip address , any machine can recieve an arp reply even if it didn't make the request will automatically update the cache, possible for malicious parties on a LAN to perform a arp spoofing attack,
+- attacker send a arp reply to a target, who associates the ip address of the lan gateway with the attackers mac address. the atttacker sends an arp reply to bob associating the target ip's address with the attacker's mac address.this is arp cache poisioning. Bob now thinks alice ip is connected with eve mac  and alice thinks bob ip is connected to eve mac. thus everything is routed through eve.
 - Eve now has control of traffic and can sniff passwords or tamper with traffic.
 - a denial of service attack is also possible.
 - arp spoofing is derived from lack of identity veriffication
 - to solve :
     - restrict LAN Access
-    - checking for multiple occurrences of the same MAC address on the LAN, which may be an indicator of possible ARP spoofing.
+    - check for multiple occurrences of the same MAC address on the LAN, 
     - Static ARP Tables :
-        - requires a network administrator to manually specify a router’s ARP cache to assign certain MAC addresses to specific IP addresses.
+        - requires a network admin to manually specify a router’s ARP cache to assign certain MAC addresses to specific IP addresses.
         - requests to adjust the cache are ignored
         - reduces flexibility if a new device joins
         - does not prevent an attacker from spoofing a mac address to intercept traffic
 
-<h4>3 Network Layer </h4>
-Network layer move packets between any two hosts in a network on a best effort basis. Relies on the link layer to do this.
+### Network Layer 
+
+Network layer move packets between any two hosts in a network on a best effort basis. 
 
 <h5> IP </h5>
 - The *Internet Protocol* (IP) is a protcol which performs a best efford to route a data packet from a src node to a dest node.
@@ -198,26 +151,31 @@ Network layer move packets between any two hosts in a network on a best effort b
 
 <h6> Routing IP Packets </h6>
 A host has an algorithm for routing packets from that host:
-    - Packet is addressed to a machine on the same LAN, then packet is transmitted directly on LAN using ARP to determine mac address of dest machine.
-    - packet is address to a machine that is not on the LAN, packet is transmitted to a specially designated machine on LAN(gateway). ARP protocol is used to determine mac address of gateway
-A host typically stores a list of IP address of the machines on LAN and the ip address of the gateway.
-Once a packet has reached a gateway node, needs to be further routed to its final dest
-Gateways and other nodes that handle routing of packets on the internet are called routers. Typically connected to two of more LANSs and use internal data structures known as routing tables to work out the next router.
-data packet with dest t, a routing table lets the router determine which neighnour it should send the packet to. Based on the numerical address,t, the routing protocol encodes the next hop from this router to each possible destination.
-There can be a misconfiguration in the routing tables that can cause a packet to travel forever. To stop this each IP packet is given (TTL - time-to-live) count by its scr. Known as a hop limit <= 255 hops and is decremented by each router that processes the packet.  if it =0 then packet is discared and error packet is sent to scr.
+
+- Packet is addressed to a machine on the same LAN, then packet is transmitted directly on LAN using ARP to determine mac address of dest machine.
+
+-  packet is address to a machine that is not on the LAN, packet is transmitted to a specially designated machine on LAN(gateway).
+
+   ARP protocol is used to determine mac address of gateway
+  A host typically stores a list of IP address of the machines on LAN and the ip address of the gateway.
+  Once a packet has reached a gateway node, needs to be further routed to its final dest
+  Gateways and other nodes that handle routing of packets on the internet are called routers. Typically connected to two of more LANSs and use internal data structures known as routing tables to work out the next router.
+  data packet with dest , a routing table lets the router determine which neighnour it should send the packet to. Based on the numerical address,t, the routing protocol encodes the next hop from this router to each possible destination.
+  There can be a misconfiguration in the routing tables that can cause a packet to travel forever. To stop this each IP packet is given (TTL - time-to-live) count by its scr. Known as a hop limit <= 255 hops and is decremented by each router that processes the packet.  if it =0 then packet is discared and error packet is sent to scr.
 
 <h6> The structure of the internet </h6>
-Routers are designed to be very fast. From each packet - it performs :
+Routers are designed to be very fast. From each packet it performs :
 - ***Drop*** : if packet is expired,it is dropped
 - ***Deliver*** : If the destination is a machine on one of the LANs to which
 the router is connected, then the packet is delivered to the destination.
 - ***Forward*** : If the destination of the packet does not belong to the LANs of the router, then the packet is forwarded to a neighboring router.
 
 2 protocols that determine how the next hops are encoded:
-- ***Open Shortest Path First (OSPF)*** : determines how packets are routed within an Autonomous system and is based on a policy that packets should travel along the shortest paths
-- ***Border Gateway Protocol (BGP)*** : etermines how packets are routed between autonomous systems (ASs) and it is based on policies dictated by contractual agreements between different ASs The routes established by BGP may not be shortest paths.
 
-Difference between a router and a switch is that a switch handles forwarding of packets on a single network and uses learned associations to reduce use of broadcasting . Router can belong to many networks and use routing tables to determine how to forward packets, can aviod broadcast altogether.
+- ***Open Shortest Path First (OSPF)*** : packets are routed within an Autonomous system and is based on a policy that packets should travel along the shortest paths
+- ***Border Gateway Protocol (BGP)*** : packets are routed between autonomous systems (ASs) and it is based on policies dictated by contractual agreements between different ASs The routes established by BGP may not be shortest paths.
+
+Difference between a router and a switch is that a switch handles forwarding of packets on a single network and uses learned associations to reduce use of broadcasting . Router can belong to many networks and use routing tables to determine how to forward packets, can avoid broadcast altogether.
 
 Bits in IP packet have a stucture
 - fixed length header
@@ -231,14 +189,14 @@ not guarantee that each packet successfully travels from its src to its dest, Ip
 
 Subnetworks (subnets) allow partitions in the networks into logical groups.IPv4  32-bit numbers that are stored as binary but written as 4 bytes
 - network portion -> ip prefix used by all machines on the same network
-- a host portion -> detect that particular device
+- host portion -> detect that particular device
 - two portions are differentiated by providing a subnet mask along with the IP address.
 - The network portion of the IP address can be identified by bitwise ANDing the subnet mask with the IP address, and the host portion can be identified by XORing this result with the IP address.
 - subnet masks can be used to define address range of a particular network
 - range of ip addtess are based on size of organization in question.
-    - ***Class A*** network : largest, has a subnet mask of at least 8 bits and includes up to 224 = 16, 777, 216 unique IP addresses
-    - ***Class B*** network : have at least a 16-bit subnet mask and up to 216 = 65, 536 unique IP addresses; they are typically allocated for ISPs and large businesses.
-    - ***Class C*** network : 4-bit subnet mask, include up to 28 = 256 unique addresses, and are assigned to smaller organizations.
+    - ***Class A*** : largest, has a subnet mask of at least 8 bits and includes up to 224 = 16, 777, 216 unique IP addresses
+    - ***Class B*** : have at least a 16-bit subnet mask and up to 216 = 65, 536 unique IP addresses; they are typically allocated for ISPs and large businesses.
+    - ***Class C***  : 4-bit subnet mask, include up to 28 = 256 unique addresses, and are assigned to smaller organizations.
 IP addresses with the host portion consisting of all zeros or all ones have a special meaning and are not used for to identify machines. Thus, a class C network has 254 usable IP addresses. Total address space for IPv4 is on the verge of exhaustion: soon, all possible IPv4 addresses will be assigned. Network Address Translation, or NAT delays the exhaustion of the IPv4 address space, it doesn’t solve it, and an actual solution is provided by IPv6, which features 128-bit addresses.
 
 <h6> Internet Control Message Protocol</h6>
@@ -252,7 +210,7 @@ IP addresses with the host portion consisting of all zeros or all ones have a sp
     - ***Destination unreachable*** : Error notification that the packet could not be delivered
 
 - ***Ping*** :uses the ICMP protcol to verify whether or not a certain host is receiving packets. ICMP echo request message to the dest host, replies with an ICMP echo response message. Simple protocol is often the first diag- nosis tool used to test if hosts are working properly.
-- ***Traceroute*** : ICMP messages to determine the path a packet takes to reach another host, either on a local network or on the Internet.  It uses TTL field in the IP header. Attempts to send a packet to the target with a TTL. Receiving a packet with TTL of 1, intermediate router discards the packets and replies to the sender with an ICMP time excceeded message,revealing the first machine along the path to the target.. it sends another packet with a TTL of 2, reaching the first router in the path, the TTL is decremented by one and forwarded to the next router. in turn sends an ICMP packet to the original sender, incrementing the TTL field in this way, traceroute can determine each host along the path to the target
+- ***Traceroute*** : ICMP messages to determine the path a packet takes to reach another host, on a local network or on the Internet.  It uses TTL field in the IP header. Attempts to send a packet to the target with a TTL. Receiving a packet with TTL of 1, intermediate router discards the packets and replies to the sender with an ICMP time excceeded message,revealing the first machine along the path to the target.. it sends another packet with a TTL of 2, reaching the first router in the path, the TTL is decremented by one and forwarded to the next router. in turn sends an ICMP packet to the original sender, incrementing the TTL field in this way, traceroute can determine each host along the path to the target
 
 <h6> IP Spoofing</h6>
 IP packet includes a place to specify the IP addresses of the destination and source nodes of the packet.
@@ -264,15 +222,15 @@ attacker sends an IP packet with a spoofed src address, won't receive a repsonse
 attacker is using IP spoofing on his outbound packets, must not car about any response for these packets or has a way to receive response
 
 <h6> Dealing with IP Spoofing</h6>
-- Border Routes: routers span two or more subnetworks can be used to block packets from outside their admin domain that have scr address from inside domain
-- IP traceback : tracing path of a packet back to its actual src address. Requests can be made to various autonomous systems along this path to block packets from this location
+- ***Border Routes***: routers span two or more subnetworks can be used to block packets from outside their admin domain that have scr address from inside domain
+- ***IP traceback*** : tracing path of a packet back to its actual src address. Requests can be made to various autonomous systems along this path to block packets from this location
 
 <h5> Packet Sniffing </h5>
-Comprising confidentiality. Possible to listen in on the traffic . Known as packet sniffing.
-Performed independlty of wheather the packets are traveling via wireless Internet : attacker resides on the same network segment
-Frames are transmitted over an ethernet network, received by ever device on same network.
-segment will normally compare the frame’s destination MAC address with its own MAC address, and discard the frame if it doesn’t match.
-Network mode set to *promiscuous* mode, llows an attacker to examine all data transmitted over a particular network segment
+- Comprising confidentiality
+- wheather the packets are traveling via wireless Internet : attacker resides on the same network segment
+- Frames are transmitted over an ethernet network, received by ever device on same network.
+  segment will normally compare the frame’s destination MAC address with its own MAC address, and discard the frame if it doesn’t match.
+- Network mode set to *promiscuous* mode, llows an attacker to examine all data transmitted over a particular network segment
 
 <h6> Defenses against Packet sniffing</h6>
 - PS can be used to troubleshoot network related problems -> computer is infected with adware or spyware
@@ -280,14 +238,15 @@ Network mode set to *promiscuous* mode, llows an attacker to examine all data tr
 - detect when network devices are in promiscuous mode
     - the fact that when a network interface is receiving all network traffic, the operating system behind that network interface is using much more processing power than if these frames were being dropped
     - elicit responses to invalid packets from network devices may provide clues suggesting
-    - should use encryption HTTPS instead of HTTP
 
-<h4>4 Transport Layer </h4>
-supports communication between machines.addressing extended is achieved by viewing each machine as having lots of ports.
-16-bit source and destination port numbers.
+### Transport Layer
+
+supports communication between machines. ports are 16 bits 
+
 Protocols:
-- Transmission Control Protocol (TCP)
-- User Datagram Protocol (UDP)
+
+- ***Transmission Control Protocol (TCP)***
+- ***User Datagram Protocol (UDP)***
 Extra feature of tcp connection oriented and provides reliable stream of bytes, with a gurantee that info arrives intact. if lost it is resend
 UDP best-effort communicatiin : where speed is more important than completeness.
 
@@ -295,14 +254,15 @@ UDP best-effort communicatiin : where speed is more important than completeness.
 <h5>Transmission Control Protocol (TCP)</h5>
 Takes IP Protocol and gurantees transmission of a stream of bits between two virtual ports.
 
-<h6>Transmission Control Protocol (TCP)</h6>
-TCP session starts with connection between sender & receiver, parties can then communicate. Ensures reliable transmission by a sequence number that is initalised during the three-way handshake, Transmission features an incremented sequence number, each part is aware when packets arrive, out of order all or not at all,
-Incoporates a cumulative acknowledge schemem two TCP sessions , sender and receiver communicating via their established TCP connection.
-the sender sends the receiver a specified amount of data, the receiver will confirm that it has received the data by sending a response packet to the sender with the acknowledgment field set to the next sequence number it expects to receive. 
-If any information has been lost, then the sender will retransmit it.
-Manages amount of data that can be sent by one party while avioding overwhleming, processing resources of other or bandwidth of network itself(*flow control*) use *sliding window protocol* -> receiver informs sender of size of receive window(number of bytes of data willing to accept befor sender must pause and wait for a response), sender keeps track of value of last thing.  When sending , the sender checks the sequence number of packet and continues only if number is less than last acknowedlenge plus current size of recevive window. 
-Otherwise it waits, stores the number shifting sliding window of sequence numbers. Sender sets a time so if no acknowledgment is received before the times expires, sender assumes data loss and retransmits
-Checksum field to ensure correctness. not intended to be cryptographically secure, detect inconsistencies in data due to network erros rather than tampoering.
+- TCP session starts with connection between sender & receiver, parties can then communicate. 
+- Ensures reliable transmission by a sequence number that is initalised during the three-way handshake, Transmission features an incremented sequence number, each part is aware when packets arrive, out of order all or not at all,
+- Incoporates a cumulative acknowledge schemem two TCP sessions , sender and receiver communicating via their established TCP connection.
+- the sender sends the receiver a specified amount of data, the receiver will confirm that it has received the data by sending a response packet to the sender with the acknowledgment field set to the next sequence number it expects to receive. 
+- If any information has been lost, then the sender will retransmit it.
+- Manages amount of data that can be sent by one party while avioding overwhleming, processing resources of other or bandwidth of network itself(*flow control*) use *sliding window protocol* -> receiver informs sender of size of receive window(number of bytes of data willing to accept befor sender must pause and wait for a response), sender keeps track of value of last thing.  
+- When sending , the sender checks the sequence number of packet and continues only if number is less than last acknowedlenge plus current size of recevive window. 
+- Otherwise it waits, stores the number shifting sliding window of sequence numbers. Sender sets a time so if no acknowledgment is received before the times expires, sender assumes data loss and retransmits
+  Checksum field to ensure correctness. not intended to be cryptographically secure, detect inconsistencies in data due to network erros rather than tampoering.
 
 <h6>Congenstion Control</h6>
 attempt to prevent overwhelming a network with traffic which could lead in poor transmission rates and dropped packets. congenstion control is not implemented into tcp packets but based on the info gathered by keeping track of acknowledgements for prev sent data and time required for certain operations. TCP adjusts data transmission rates using this information to prevent network congestion.
@@ -324,8 +284,8 @@ applications can create network connections using sockets
 
 <h5>User Data Protocol (UDP)</h5>
 
-- UDP doesn't make a gurantee about the order /correctness of packet delivery. No inital handshake to establish connection, allows to send messages (datagrams) asap. if sender wants to communicate via UDP, it only needs a socket.
-- UDP features a 16 bit checksum to verfiy the inegrity og each packet, no seq num scheme, so transmissions can arrive out of order or may not arrive at all. Assumed that checking for missing packets is left to application. UCP can be faster than TCP
+- doesn't make a gurantee about the order /correctness of packet delivery. No inital handshake to establish connection, allows to send messages (datagrams) asap. only needs a socket.
+- features a 16 bit checksum to verfiy the integrity of each packet, no seq num scheme, so transmissions can arrive out of order or may not arrive at all. Assumed that checking for missing packets is left to application. UCP can be faster than TCP
 - Often used in time-senstive applications where data integrity is not as important as speed(DNS or VoIP) TCP is used for applications where order and intergirty matter (HTTP,SSH,FTP)
 - Header :
     - Src port
@@ -340,7 +300,7 @@ applications can create network connections using sockets
 - *Network address Translation* : allows machines on local-area network to share a single public IP address. Public IP add represents the point of contact with internet for entire LAN, while machines on network have private IP add that only accessible from within network
 - NAT allows an entire network to be asssigned to a single public IP add, widespread use of NAT, delayed inevitable exhaustion of the IPv4 space,
 a lot of address capacity for NAT, because there are a number of private IP addresses that such networks are allowed to use which cannot be used on the (public) Internet.
-- e IP address are of the form 192.168.x.x, 172.16.x.x through 172.31.x.x, and 10.x.x.x.
+- IP address are of the form 192.168.x.x, 172.16.x.x through 172.31.x.x, and 10.x.x.x.
 - NAT router represents the gate- way between private IP addresses and the public Internet, and this router is responsible for managing both inbound and outbound Internet traffic.
 
 <h6>How NAT Works?</h6>
@@ -358,7 +318,7 @@ a lot of address capacity for NAT, because there are a number of private IP addr
 <h5>TCP Session Hijacking</h5>
 
 <h6>TCP Sequence Prediction</h6>
-- *Session Spoofing* creates a spoofed TCP session instead of stealing an existing one, type of session hijacking, *TCP sequence prediction* attack triws to guess the inital sequence number sent by the sercer at start of a session. Early TCP stacks implemented sequence numbers by using a simple counter that was added 1 with each transmission.Not using any randomness, trival to predict next sequence number, key to attack. Modern TCP stack implementations use pseudo-random numbers generators to determine seqence numbers, makes TCP sequence prediction attack more difficult, not impossible. Following scenarios could happen:
+- *Session Spoofing* creates a spoofed TCP session instead of stealing an existing one, type of session hijacking, *TCP sequence prediction* attack tries to guess the inital sequence number sent by the sercer at start of a session. Early TCP stacks implemented sequence numbers by using a simple counter that was added 1 with each transmission.Not using any randomness, trival to predict next sequence number, key to attack. Modern TCP stack implementations use pseudo-random numbers generators to determine seqence numbers, makes TCP sequence prediction attack more difficult, not impossible. Following scenarios could happen:
 1. The attacker launches a denial-of-service attack against the client victim to prevent that client from interfering with the attack.
 2. The attacker sends a SYN packet to the target server, spoofing the source IP address to be that of the client victim.
 3. After waiting a short period of time for the server to send a reply to the client (which is not visible to the attacker and is not acted on by the client due to the DOS attack), the attacker concludes the TCP handshake by sending an ACK packet with the sequence number set to a prediction of the next expected number (based on information gathered by other means), again spoofing the source IP to be that of the client victim.
@@ -454,7 +414,9 @@ anonymity
 ### Historical Ciphers 
 - *Rail fence Cipher*
   > shared secret key, plaintext written in columns of size k. The ciphertext is the concatenation of the resulting rows
-    - Decryption: ciphertext written in rows of size $\frac{\mod{c}}{k}$
+  >
+  >   - Decryption: ciphertext written in rows of size $\frac{\mod{c}}{k}$
+
    - small key space size $k<\mod{c} \Rightarrow$ brute force attack
 - *Substitution cipher*
     > shared secret: a permutation $\omega$ of the set of characters, Encryption: apply $\omega$ to each character of the plaintext.
@@ -463,10 +425,12 @@ to each character of the plaintext.
   - break using frequency of letters,diagrams, triagrams, expected words
 - *Vigenere cipher*
     > shared secret key: a word w over the English alphabet,break the plaintext $m = m_1 . . . m_n$ in $\frac{m}{w}$ encrypt each block as follows : $m_{i+1} + w_1 =m_{i+1} + w_1$ mod 26
-    - Decryption: break the ciphertext $c = c_1 . . . c_n$ in $\frac{m}{w}$ blocks, and decrypt each  block as follows $c_{i+1}-w_1= this$
+    >
+    > - Decryption: break the ciphertext $c = c_1 . . . c_n$ in $\frac{m}{w}$ blocks, and decrypt each  block as follows $c_{i+1}-w_1= this$
+
     - Can perform frequency analysis on this 
 
-### Chapter 8.1.3 One time pads 
+###  One time pads 
 > same approach as vingrene cipher, use a block of keys $(k_1,k_2,k_3,..k_m)$ to encrypt plaintext M of length n
 
 - length, m, of the block of keys has to be the same as n, the length of the plaintext.
@@ -480,7 +444,7 @@ to each character of the plaintext.
 $C= M \oplus P$
 - Can recover plaintext from ciphertext using $M= C \oplus P$
 
-### Chapter 8.1.4 Pseudo-Randomm Number Generators 
+###  Pseudo-Randomm Number Generators 
 
 #### The Linear Congruential Generator
  > numbers its generates are uniformly distributed
@@ -504,7 +468,7 @@ Kerckhoff’s principle
 - Encryption E : ${0,1}^K \times {0,1}^\ell \Rightarrow {0,1}^\ell$
 - Decryption D :  ${0,1}^K \times {0,1}^\ell \Rightarrow {0,1}^\ell$
 
-### 8.1.6 The Advanced Encryption Standard(AES)
+###  The Advanced Encryption Standard(AES)
 AES is a block cipher operates on 128-bit blocks, designed to be used with keys that are 128, 192 and 256 bits long, yielding ciphers known as AES-X
 
 #### AES Rounds 
@@ -513,7 +477,7 @@ AES is a block cipher operates on 128-bit blocks, designed to be used with keys 
 Round i(i=1..10) receive state $X_{i-1}$ as input and produce state $X_i$. ciphertext C is the output of the final round: $C = X_1$
 
 Each round is bulit from four basic steps 
-1. *SubBytes step*:* an S-box substitution step
+1. *SubBytes step*:an S-box substitution step
 2. *ShiftRows step*: a permutation step
 3. *MixColumns step*: a matrix multiplication (Hill cipher) step
 4. *AddRoundKey step*: an XOR step with a round key derived from the 128-bit encryption key
@@ -540,13 +504,13 @@ AES should be implenented in a way that the execution time remains constant,
 - disadvan determinstic , each plaintext has unique associated ciphertext the ECB mode may reveal patterns
 
 #### Cipher Block Chaining (CBC Mode)
- > avoids revelations of patterns in a sequence of blocks in cipher block chaining mode $C_1=E_k(B_i\oplus C_{i-1})$ B_1 is exclusive-ored with initalization vector C_0
+ > avoids revelations of patterns in a sequence of blocks in cipher block chaining mode $C_1=E_k(B_i\oplus C_{i-1})$$ B_1 $is exclusive-ored with initalization vector  $C_0$
 
  - advan
     - identical blocks appear at different places in input sequence, likely to have differebt encryptions in ourput sequence. 
     -  doesn not allow the encryption of blocks in a sequence to be done independently
     - decrypt can begin in parallel is all cipher text blocks are available
-  
+
 #### Cipher Feedback (CFB) Mode
 > block encryption is similar to that of the CBC mode, B_i involves the encryption $C_{i-1}$. Formula is $C_i=E_k(C_{i-1}) \oplus B_i$
 
@@ -562,7 +526,7 @@ AES should be implenented in a way that the execution time remains constant,
 
 - generation of pad vectors as well as encryption and decryption, done in parallel
 
-### 8.5.1 Details for RES
+### Details for RES
 > 128 bit blocks, 16 bytes of 8 bits each arranged in a 4x4 matrix
 
 #### SubBytes Step
@@ -592,7 +556,7 @@ round 0 key matrix, refer to column as W[0], W[1], W[2], ....
 
  Might need to go through again 
 
- ## Chapter 8.3 Cryptohash functions 
+ ##  Cryptohash functions 
 
  ### Properties and Applications
  > one way, given a message M, should be easy to compute a hash value H(M) from that message 
@@ -606,7 +570,6 @@ round 0 key matrix, refer to column as W[0], W[1], W[2], ....
  - File intergrity
  - Password verfication
  - Key derivation
- - 
 
  #### Collision Resistance 
  > hash function, H, is a mapping of input strings to smaller output strings.
@@ -636,18 +599,6 @@ ___
  ## Chapter 8.2 Public Key Crytography 
  a and b in $\mathbb{Z}$ are relative primes if they have no common factors
 
- ### Modular Arithmetic
- > $\mathbb{Z}_n = {0,1,2,..,n-1}$ 
-
- #### Modulo Operator
- > x modulo n = a , remember to take the remainder 
-
- #### Modular Inverses 
- > $xy$ mod $n=1$
-
- #### Modular Exponentiation
- > $x^y$ mod n
-
  ### The RSA Cryptosystem
  > plaintext and ciphertext message blocks as large numbers using thousands of bits.
  > encryption and decryption done using modular exponentiation, based on Euler's Thm
@@ -665,7 +616,8 @@ ___
  #### Security of the RSA Cryptosystem
  > based on difficulty on finding d, given e and n 
  > $\phi(n)=(p-1)(q-1)$, easy to compute d from e
-  - side channel attacks have been done , it is determinstic however
+ >
+ >   - side channel attacks have been done , it is determinstic however
 
  #### Efficient Implementation the RSA Cryptosystem
  - *Primality Testing* : testing if an integer is prime
@@ -727,14 +679,15 @@ Corollary
 ___
 Euclidean Algorithm:
 > The GCD d of two numbers, a>0, and $b \geq 0$ is the samlled positive integer d such that $d=ia+jb$ for integers i and j 
- 
+
  Extended algorithm
   first test if b is zero otherwise recurive call algorithm
-  ___
-  Efficiency of extended euclidian algorithm, running time of algorithm $\ceil{\log{a}}$ 
-  ___
+___
+  Efficiency of extended euclidian algorithm, running time of algorithm $\ceil{\log{a}}​$ 
+___
   Modular Exponentiation 
-  Running time is $\ceil{\log{n}}$
+  Running time is $\ceil{\log{n}}​$
+
 ___
 Repeated Squaring 
 using linear number of multiplications rather than an exponentiation
@@ -754,7 +707,7 @@ document.
 
 - *Nonforgeability*. It should be difficult for an attacker, Eve, to forge a signature, $S_{Alice}(M)$, for a message, M, as if it is coming from Alice.
 - *Nonmutability*. It should be difficult for an attacker, Eve, to take a signature, $S_{Alice}(M)$, for a message, M, and convert $S_{Alice}(M)$ into a valid signature on a different message, N.
-- if a digital signature scheme acheives these properties, actually achieves *nonrepudiation* , should be difficult for Alice to claim she didn’t sign a document, M, once she has produced a digital signature, $S_{Alice}(M)$, for that document.
+- if a digital signature scheme acheives these properties, actually achieves *nonrepudiation* , should be difficult for Alice to claim she didn’t sign a document, M, once she has produced a digital signature, $S_{Alice}(M)​$, for that document.
 
 ### The RSA Signature Scheme
 > Any third party can verify signature by testing the following information : is it true that $M=S^\ell \mod n$
@@ -785,10 +738,11 @@ contains :
 
 X.509 certificates : defines a framework for the provision of authentication services
 
-## Chapter 6.1 The Application Layer and DNS 
+##  The Application Layer and DNS 
 ### A sample of Application Layer Protcols 
 ___
-*Domainnamesystem(DNS)* 
+*Domain name system(DNS)* 
+
 > This is the protocol that allows us to use intuitive domain names to refer to Internet hosts rather than using IP addresses. Most application programs and other application-layer services rely on DNS.
 ___
 *Hypertext transfer protocol (HTTP)*
@@ -816,8 +770,6 @@ ___
 > Resolving domain names to ip address 
 
 - arranged in a hierarchy that can be examined from left to right
-- top-level domain
-- subdomain
 
 #### Domain Name Registration
 - Generic top-level domain: such as .com, .net 
@@ -880,7 +832,7 @@ An attacker overcomes:
 - attacker must issue a response to her own DNS query before authoritative name server is given a chance to respond
 - each DNS request is given a 16-bit query ID. If the response to a query is not marked with the same ID as its corresponding request, it will be ignored
 
-#### DNS Cache Posioning and the Birthday Paradoz 
+#### DNS Cache Posioning and the Birthday Paradox
 > guessing is actually more likely if the attacker issues a lot of fake requests and responses to the same domain name lookup
 
 Increase in attack success probability from an increases in fake reuqests in known as brithday paradox 
@@ -951,7 +903,7 @@ the client access appropriate resources, such as a command prompt
 - Communicating parties store SAs in a security association database (SADB)
 - protection for outgoing packets and verifies or decrypts incoming packets by using a security parameter index (SPI) field stored in the IPsec packet header, along with the destination or source IP address, to index into the SADB and perform actions based on the appropriate SA.
 
-#### Internet Key Exchange(IKE)
+#### Internet Key Exchange (IKE)
 > handle negotiations of SAs
 
 1. inital security association is established to encrypt subsequent IKE communications
@@ -986,10 +938,6 @@ Different Implementations
 ### Some Risks in Allowing for VPNs and Tunneling
 > payloads of a series of network packets are en- capsulated in a different delivery protocol that might otherwise be blocked by a firewall
 > an information-leakage attack, such as sending company secrets out of a compromised network using HTTP packets, becomes more difficult to detect when protocols relying on tunneling are used
-
-## Usable Security 
-> = Humans + Security Technology
-> think what skills they have and what they don't have 
 
 ## Chapter 6.2 Firewalls 
 > firewalls can be employed to filter incoming or outgoing traffic based on a predefined set of rules that are called firewall policies 
@@ -1037,7 +985,7 @@ allow administrators to apply more restrictive rules to network traffic and crea
 
 n- age traffic based on the actual contents of packets entering and exiting a network rather than merely considering the origin and destination. This is possible through the use of application-layer firewalls
 
-## Chapter 6.4 Intrusion Detection
+## Intrusion Detection
 >  intrusion detection system (IDS) is a software or hardware system that is used to detect signs of malicious activity on a network or individual computer
 > IDS sensors which collect real-time data about the functioning of network components and computers, and an IDS manager, which receives reports from sensors.
 
@@ -1100,13 +1048,13 @@ Network IDs usually workby performing deep packet inspection on incoming and out
 > Inout is a stream of records that identifies elementary actions for a network or host
 
 Event records include:
-• Subject: the initiator of an action on the target
-• Object: the resource being targeted, such as a file, command, device,
+• ***Subject***: the initiator of an action on the target
+• ***Object***: the resource being targeted, such as a file, command, device,
 or network protocol
-• Action: the operation being performed by the subject towards the object
-• Exception-condition: any error message or exception condition that was raised by this action
-• Resource-usage: quantitative items that were expended by the system performing or responding to this action
-• Time-stamp: a unique identifier for the moment in time when this action was initiated
+• ***Action***: the operation being performed by the subject towards the object
+• ***Exception-condition***: any error message or exception condition that was raised by this action
+• ***Resource-usage***: quantitative items that were expended by the system performing or responding to this action
+• ***Time-stamp***: a unique identifier for the moment in time when this action was initiated
 
 ### Rule-Based Intrusion Detection
 > identify events that should trigger alarms is to use rules
@@ -1124,7 +1072,7 @@ or network protocol
 
 - works out typical profile for each user or host 
 - Once a user profile is in place, the IDS manager can determine thresholds for anomalous behaviors and then sound an alarm any time a user or host deviates significantly from the stored profile for that person or machine
-- tatistical IDSs rely on analyzing patterns in network traffic, it would be difficult for an attacker to hide his behavior from an IDS manager using such techniques
+- statistical IDSs rely on analyzing patterns in network traffic, it would be difficult for an attacker to hide his behavior from an IDS manager using such techniques
 
 - nonmaliciuos behaviour could generate a significant anomaly.
 - sensitivity to normal changes in system or user behavior therefore leads to false positives
@@ -1134,7 +1082,7 @@ or network protocol
 > which traffic is permitted through a firewall and which ports on a target machine are running remote services is a crucial step in an- alyzing a network for security weaknesses
 
 Ports can be :
-- open,closed,blocker
+- Open,closed,blocked
   
 #### TCP Scans 
 > perform scan attempts to initate TCP connection on each of ports on a target machine, 
@@ -1279,7 +1227,7 @@ LImitations:
 - TOR does not provide protection against end-to-end timing attacks
 - If the attacker can see both ends of the communication channel, he can correlate volume and timing information on the two sides
 
-## Chapter 3.1 Operating Systems Concepts 
+##  Operating Systems Concepts 
 > provides interface between users of a computer and computer hardware
 > manages ways applications access resources in a computer including disk drives, CPU, main memory, input devices, output devices and network interfaces 
 
@@ -1289,7 +1237,7 @@ multiple application programs to run at the same time
 ___
 
 ### The kernel and Input/Output 
-> Kernel hadnles managment of low-level hardware resources, including memory, processors, input,output.
+> Kernel handles managment of low-level hardware resources, including memory, processors, input,output.
 User Applications <-> Operating System( OS Kernel and Non - im os applications) <-> CPU, Memory, Input and Output(Hardware)
 
 #### Input/ Output Devices 
@@ -1402,13 +1350,11 @@ that they allow for the total size of the address spaces of executing processes 
  - software that creates a simulated environment the operating system can interact with
  - software layer that provides this environment is known as a hypervisor or virtual machine monitor (VMM)
  - system running inside the VM is known as a guest, and the native operating system is known as the host
-  
-#### Implementing Virtual Machines 
-- Emulation 
-where the host operating system simulates virtual interfaces that the guest oper- ating system interacts with. Communications through these interfaces are translated on the host system and eventually passed to the hardware. The benefit of emulation is that it allows more hardware flexibility. ownside of emulation is that it typically has decreased performance due to the conversion process associated with the communication between the virtual and real hardware
 
-- Virtualization
-removes above conversion, the virtual interfaces within the VM must be matched with the actual hardware on the host machine, so communications are passed from one to the other seamlessly. This reduces the possibilities for running exotic guest operating systems, but results in a significant performance boost.
+#### Implementing Virtual Machines 
+- ***Emulation ***:where the host operating system simulates virtual interfaces that the guest oper- ating system interacts with. Communications through these interfaces are translated on the host system and eventually passed to the hardware. The benefit of emulation is that it allows more hardware flexibility. ownside of emulation is that it typically has decreased performance due to the conversion process associated with the communication between the virtual and real hardware
+
+- ***Virtualization*** :removes above conversion, the virtual interfaces within the VM must be matched with the actual hardware on the host machine, so communications are passed from one to the other seamlessly. This reduces the possibilities for running exotic guest operating systems, but results in a significant performance boost.
 
 Advans:
 - *Hardware Efficiency* : system admibs to host multi os on same machine ensuring efficient allocation of hardware resources
@@ -1416,7 +1362,7 @@ Advans:
 -  *Security*: maximizing available resources and provid- ing portable computing solutions, virtual machines provide several benefits from a security standpoint.
 -  *Management Convenience* : ability to take snapshots of the entire virtual machine state can prove very convenient
 
-## Chapter 3.4 Application Program Security 
+## Application Program Security 
 
 ### Compiling and Linking 
 >  machine code instructions that a processor can execute is known as compiling
@@ -1432,7 +1378,7 @@ Advans:
 ### Stack-Based Buffer Overflow 
 > exploits the special structure of the memory stack
 
-- n attacker provides input that the program blindly copies to a buffer that is smaller than the input.
+- attacker provides input that the program blindly copies to a buffer that is smaller than the input.
 -   an attacker could overwrite local vari- ables adjacent in memory to the buffer, which could result in unexpected behavior.
 - a stack smashing attack, the attacker exploits a stack buffer vulnerability to inject malicious code into the stack and overwrite the return address of the current routine so that when it terminates, execution is passed to the attacker’s malicious code instead of the calling routine.
 
@@ -1462,7 +1408,7 @@ JUnk Padding -> Guessed Address of Shellcode -> NOPs -> Shellcode
 > malicious code included in an exploit is often known as shellcode, written in assembly language 
 
 
-#### Preventing Stack-Based BUffer Overflow Attacks 
+#### Preventing Stack-Based Buffer Overflow Attacks 
 - check that you are not overwriting address 
 - Canary : a value that is placed between a buffer and control data (which plays a similar role to a canary in a coal mine). The system regularly checks the integrity of this canary value, and if it has been changed, it knows that the buffer has been overflowed
 - address space layout randomization (ASLR) , rearranges the data of a process’s address space at random, making it extremely difficult to predict where to jump in order to execute code.
@@ -1476,7 +1422,7 @@ JUnk Padding -> Guessed Address of Shellcode -> NOPs -> Shellcode
 - can overwrite portions of the next block 
 
 #### Preventing Heap-Based Buffer Overflow Attacks 
-- ns. Address space randomization prevents the attacker from reliably guessing memory locations, making the attack more difficult.
+- Address space randomization prevents the attacker from reliably guessing memory locations, making the attack more difficult.
 - some portions not executable 
 - store heap metadata in seperate location
 
@@ -1490,7 +1436,7 @@ JUnk Padding -> Guessed Address of Shellcode -> NOPs -> Shellcode
 > attacker could exploit this small delay by changing the file in question between the two calls
 > two operations are performed atomically, that is, they should be performed as a single uninterruptible operation
 
-## Chapter 3.3.2 Password-Based Authentication
+## Password-Based Authentication
 > authentication username and passsword 
 
 - typi- cally keep cryptographic one-way hashes of the passwords in a password file or database instead
@@ -1506,7 +1452,7 @@ JUnk Padding -> Guessed Address of Shellcode -> NOPs -> Shellcode
 ### Password Authentication in Windows and Unix-based Systems
 Windows systems, password hashes are stored in a file called the Security Accounts Manager (SAM) file, which is not accessible to regular users while the operating system is running
 
-# Chapter 7 Web Security 
+### Web Security 
 
 ## The World Wide Web 
 ### HTTP And HTML
@@ -1546,7 +1492,7 @@ port
 • Expiration date of the certificate
 • Domain name of the web site
 • Organization operating the web site and its location
-• Identifierofthepublic-keycryptosystemusedbythewebserver(e.g., 1,024-bit RSA)
+• Identifier of the public-key crypto system used by the webserver (e.g., 1,024-bit RSA)
 • Public key used by the web server in the HTTPS protocol
 • Identifier of the cryptographic hash function and public-key cryp- tosystem used by the CA to sign the certificate (e.g., SHA-256 and 2,048-bit RSA)
 • Digital signature over all the other fields of the certificate
@@ -1560,7 +1506,7 @@ port
 > root certificate is known as a self- signed certificate, where the issuer is the same as the subject
 > the highest authority within an organization, are referred to as anchor points in the chain of trust used to verify a certificate
 
-#### Trustworthiness and Usability Issues for CErtificates 
+#### Trustworthiness and Usability Issues for Certificates 
 - certificate revocation list
   - private key compromise or change of organization operating the web site
 
@@ -1569,11 +1515,6 @@ port
 
 #### Document Object Model (DOM)
 > representing the content of a web page in an organized way
-- makes a truee 
-
-#### Javascript
->  handles events
-
 ### Sessions and Cookies 
 > encapsulates information about a visitor that persists beyond the loading of a single page
 
@@ -1581,7 +1522,7 @@ port
 
 concept of a session is a class of attacks known as *session hijacking*
 
-#### SEssions using GET or POST
+#### Sessions using GET or POST
 - user’s session information and inserts it into the page being delivered to the client using the mechanism of hidden fields
 - Each time the user navigates to a new page, this code passes the user’s session information to the server allowing it to “remember” the user’s state.
 - method is particularly susceptible to man-in- the-middle attacks
@@ -1633,7 +1574,7 @@ attacker intercept communication between a web client and web server, but also r
 ### Phishing 
 >  attacker creates a dummy web site that appears to be identical to a legitimate web site in order to trick users into divulging private information.
 
-#### URL OBfuscation
+#### URL Obfuscation
 > disguise the URL of the fake site
 
 - own as the Unicode attack, more formally known as a homeograph attack. Unicode characters from international alphabets may be used in URLs in order to support sites with domain names in multiple languages, so it is possible for phishers to register domain names that are very similar to existing legitimate sites by using these international characters.
@@ -1701,18 +1642,16 @@ Login attack :
 a malicious web site issues cross- site requests on behalf of the user, but instead of authenticating to the victim site as the user, the requests authenticate the user as the attacker
 
 ### Defenses Against Client-Side Attacks
-Mitigation of these attacks by the user can be facilitated with two primary methods:
-• Safe-browsing practices
-• Built-in browser security measures
-
-#### Safe Browsing Practices 
+- Safe-browsing practices
+- Built-in browser security measures
 - https
+
 - the legitimacy of the site should be confirmed by examining the URL and ensuring that there are no certificate errors
-  
+
 #### Bulit in Browser Security Measures 
 web sites are placed in the Internet Zone. Users can then delegate sites to Trusted and Restricted zones, Each zone has its own set of security policies, allowing the user to have fine-grained control depending on whether or not they trust a particular web site
 
-## Attacks on SErvers
+## Attacks on Servers
 ### Server side scripting 
 useful to utilize code on the server side that is executed before HTML is delivered to the user
 
@@ -1721,7 +1660,7 @@ allow servers to perform actions such as accessing databases and modifying the c
 executed on the server, and because of this only the result of this code’s execution, not the source, is visible to the client
 
 #### PHP 
-> PHP is a hypertext pre- processing language that allows web servers to use scripts to dynamically create HTML files on-the-fly for users, based on any number of factors, such as time of day, user-provided inputs, or database queries
+> PHP is a hypertext preprocessing language that allows web servers to use scripts to dynamically create HTML files on-the-fly for users, based on any number of factors, such as time of day, user-provided inputs, or database queries
 
 ### Server-Side Script Inclusion Vulnerabilities
 > web security vulnerability at a web server is exploited to allow an attacker to inject arbitrary scripting code into the server, which then executes this code to perform an action desired by the attacker.
@@ -1729,12 +1668,14 @@ executed on the server, and because of this only the result of this code’s exe
 #### Remote- File Inclusion
 desirable for server-side code to execute code contained in files other than the one that is currently being run
 
-n attack is known as a remote-file inclusion (RFI) attack. code an attacker might execute in such an attack is a web shell, which is a remote command station that allows an attacker to navigate to the web server and possibly view, edit, upload, or delete files on web sites that this web server is hosting.
+attack is known as a remote-file inclusion (RFI) attack. code an attacker might execute in such an attack is a web shell, allows an attacker to navigate to the web server and possibly view, edit, upload, or delete files on web sites that this web server is hosting.
 
 #### Local-File Inclusion (LFI)
-> ocal-file inclusion (LFI) attack causes a server to execute injected code it would not have otherwise performed (usually for a malicious purpose). The difference in an LFI attack, however, is that the executed code is not contained on a remote server, but on the victim server itself. 
-> locality may allow an attacker access to private information by means of bypassing authentication mechanisms
-> FI attacks can allow an attacker to access files on the web server’s system, outside of the root web directory.
+> local-file inclusion (LFI) attack causes a server to execute injected code it would not have otherwise performed (usually for a malicious purpose). 
+>
+> - difference in an LFI attack, executed code is not contained on a remote server, but on the victim server 
+> - locality may allow an attacker access to private information by means of bypassing authentication mechanisms
+> - LFI attacks can allow an attacker to access files on the web server’s system, outside of the root web directory.
 
 ### Databases and SQL Injection Attacks 
 > database is a system that stores information in an organized way and produces reports about that information based on queries presented by users.
@@ -1747,48 +1688,38 @@ n attack is known as a remote-file inclusion (RFI) attack. code an attacker migh
 • Conditional statements using WHERE, and basic boolean operations such as AND and OR: to identify records based on certain conditions
 • UNION: to combine the results of multiple queries into a single result
 
-queries to query database
-
 #### SQL Injection Attack
 > SQL injection allows an attacker to access, or even modify, arbitrary information from a database by inserting his own SQL commands in a data stream that is passed to the database by a web server. The vulnerability is typically due to a lack of input validation on the server’s part.
 
 #### Unintended Information Disclosure
 constructing the query to the database, the server-side code does not check to see whether the GET variable, id, is a valid input, that is, that it is in proper format and is referring to an id value that actually exists.
 
-#### BYpassing Aunthentication 
-he server creates an SQL query using the POST variables,umber of rows returned by this query is greater than zero (that is, there is an entry in the users table that matches the entered username and password, access is granted.
+#### Bypassing Aunthentication 
+server creates an SQL query using the POST variables,number of rows returned by this query is greater than zero (that is, there is an entry in the users table that matches the entered username and password) -> access is granted.
 
 #### Other SQL Injection Attacks
-> allow for inserting new records, modifying existing records, deleting records, or even deleting entire tables
-
-to access information from a database even when the results of a vulnerable database query are not printed to the screen., using mutliple injected queries, known as blind SQL Injection Attack
-
-sert malicious code into the database that could at some point be sent to users’ browsers and executed
-
-SQL injection worm. orms propagate automatically by using the resources of a compromised server to scan the Internet for other sites vulnerable to SQL Injection
+- access info from a database even when results of vulnerable database query are not printed to the screen, using mutliple injected queries, known as blind SQL Injection Attack
+- insert malicious code into the database to be sent to users’ browsers and executed
+- SQL injection worms propagate automatically by using the resources of a compromised server to scan the Internet for other sites vulnerable to SQL Injection
 
 #### Preventing SQL Injection 
-- strip dangerous characters 
+- strip dangerous characters
 
 ### Denial of Service Attacks 
-> single point of failure : major web site uses a single web server to host the site
+> overload a web server with so many HTTP requests that the server is unable to answer legitimate requests, multiple web servers for an important web site can also serve as protection
 
-over- load a web server with so many HTTP requests that the server is unable to answer legitimate requests
-
-multiple web servers for an important web site can also serve as protection
-
-### Web SErver Privileges 
-he general principle of least privilege, the web server application should be run under an account with the lowest privileges possible
+### Web Server Privileges 
+> ***least privilege***: web server app should be run under an account with the lowest privileges possible
 
 an attacker may first compromise the web server, and then exploit weaknesses in the operating system of the server or other programs on the machine to elevate his privileges to eventually attain root access
 
 ### Defenses Against Server-Side Attacks
 
 #### Developers 
-- development practices is the principle of input validation
+- input validation
 
 #### Admin
 - least privilege 
 - web servers should be granted read privileges only to the directories in the web site’s root directory, write privileges only to files and directories that absolutely need to be written to
-- group policy, which is a set of rules that applies to groups of users
-- apply security updates and patches as soon as they are released
+- group policy for users 
+- apply security updates & patches as soon as they are released
