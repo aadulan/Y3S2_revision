@@ -405,7 +405,7 @@ ip traceback tech relied on logging each packet forwareded by each router. signi
 
 *node sampling* single field in ip packet that has only enough room for one address is used. Each router overwrites this field of each packet with own address with some probability p.
 
-## Crypography 
+## Cryptography 
 ___
 
 > used for confidentiality, integrity, authentication,
@@ -413,17 +413,20 @@ anonymity
 
 ### Historical Ciphers 
 - *Rail fence Cipher*
-  > shared secret key, plaintext written in columns of size k. The ciphertext is the concatenation of the resulting rows
-  >
-  >   - Decryption: ciphertext written in rows of size $\frac{\mod{c}}{k}$
 
-   - small key space size $k<\mod{c} \Rightarrow$ brute force attack
+  > shared secret key $k \in \mathbb{N}$, plaintext written in columns of size k. The ciphertext is the concatenation of the resulting rows
+  >
+  >   - Decryption: ciphertext written in rows of size $\frac{|c|}{k}​$
+
+   - small key space size $k< |c| \Rightarrow$ brute force attack
 - *Substitution cipher*
-    > shared secret: a permutation $\omega$ of the set of characters, Encryption: apply $\omega$ to each character of the plaintext.
-    - Decryption: apply $\omega^{-1}$
-to each character of the plaintext.
+
+  > shared secret: a permutation $\varpi$ of the set of characters, Encryption: apply $\varpi$ to each character of the plaintext.
+  - Decryption: apply $\varpi^{-1}$
+  to each character of the plaintext.
   - break using frequency of letters,diagrams, triagrams, expected words
 - *Vigenere cipher*
+
     > shared secret key: a word w over the English alphabet,break the plaintext $m = m_1 . . . m_n$ in $\frac{m}{w}$ encrypt each block as follows : $m_{i+1} + w_1 =m_{i+1} + w_1$ mod 26
     >
     > - Decryption: break the ciphertext $c = c_1 . . . c_n$ in $\frac{m}{w}$ blocks, and decrypt each  block as follows $c_{i+1}-w_1= this$
@@ -1352,11 +1355,11 @@ that they allow for the total size of the address spaces of executing processes 
  - system running inside the VM is known as a guest, and the native operating system is known as the host
 
 #### Implementing Virtual Machines 
-- ***Emulation ***:where the host operating system simulates virtual interfaces that the guest oper- ating system interacts with. Communications through these interfaces are translated on the host system and eventually passed to the hardware. The benefit of emulation is that it allows more hardware flexibility. ownside of emulation is that it typically has decreased performance due to the conversion process associated with the communication between the virtual and real hardware
+- ***Emulation***: where the host operating system simulates virtual interfaces that the guest oper- ating system interacts with. Communications through these interfaces are translated on the host system and eventually passed to the hardware. The benefit of emulation is that it allows more hardware flexibility. ownside of emulation is that it typically has decreased performance due to the conversion process associated with the communication between the virtual and real hardware
 
-- ***Virtualization*** :removes above conversion, the virtual interfaces within the VM must be matched with the actual hardware on the host machine, so communications are passed from one to the other seamlessly. This reduces the possibilities for running exotic guest operating systems, but results in a significant performance boost.
+- ***Virtualization***: removes above conversion, the virtual interfaces within the VM must be matched with the actual hardware on the host machine, so communications are passed from one to the other seamlessly. This reduces the possibilities for running exotic guest operating systems, but results in a significant performance boost.
 
-Advans:
+Advantages:
 - *Hardware Efficiency* : system admibs to host multi os on same machine ensuring efficient allocation of hardware resources
 -  *Portability* : to run a program on multiple different machines
 -  *Security*: maximizing available resources and provid- ing portable computing solutions, virtual machines provide several benefits from a security standpoint.
@@ -1379,7 +1382,7 @@ Advans:
 > exploits the special structure of the memory stack
 
 - attacker provides input that the program blindly copies to a buffer that is smaller than the input.
--   an attacker could overwrite local vari- ables adjacent in memory to the buffer, which could result in unexpected behavior.
+-   an attacker could overwrite local variables adjacent in memory to the buffer, which could result in unexpected behavior.
 - a stack smashing attack, the attacker exploits a stack buffer vulnerability to inject malicious code into the stack and overwrite the return address of the current routine so that when it terminates, execution is passed to the attacker’s malicious code instead of the calling routine.
 
 #### Seizing Control of Execution 
